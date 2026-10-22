@@ -1,0 +1,70 @@
+# Attack Engine - scheduling configuration (Phase 2).
+#
+# Plans WHERE attacks could be placed and how the budget is divided. No attack
+# values are produced in this phase. See README "Plan" and "Scheduling conventions".
+
+# Global seed for all deterministic draws. Per-stream seeds are derived from this
+# value and stable names (family, station, partition) via SHA-256 + SeedSequence.
+global_seed: 14
+
+# Fraction of finite target observations to target, in [0, 1]. 0 means strictly zero.
+attack_budget: 0.06
+
+# Partitions forming the budget scope: both the denominator (count of finite targets)
+# and where windows may be placed. Windows never cross a partition or station boundary.
+budget_scope:
+  - train
+  - validation
+  - test
+
+# Attack families to schedule. Numerical transformations are NOT implemented yet.
+enabled_families:
+  - spike
+  - bias
+  - drift
+  - replay
+  - stealth
+
+# Default window-length bounds (hours), overridable per family below.
+min_window_length: 6
+max_window_length: 168
+
+# Deterministic retry ceiling per (family, station, partition) cell.
+max_attempts: 2000
+
+# Reserved windows must not overlap for the same station. Must stay false this phase.
+allow_overlap: false
+
+# What to do when a cell cannot fully consume its allocation: "report" (default) or "fail".
+insufficient_policy: report
+
+# Budget split across families (largest-remainder method; weights need not sum to 1).
+# min_history_hours: observations required before a window start within the same
+# continuous segment. Replay and stealth need prior context; the exact source-length
+# matching for replay is deferred to Phase 3.
+family_parameters:
+  spike:
+    weight: 0.15
+    min_window: 1
+    max_window: 6
+    min_history_hours: 0
+  bias:
+    weight: 0.25
+    min_window: 6
+    max_window: 168
+    min_history_hours: 0
+  drift:
+    weight: 0.25
+    min_window: 24
+    max_window: 336
+    min_history_hours: 0
+  replay:
+    weight: 0.20
+    min_window: 6
+    max_window: 168
+    min_history_hours: 48
+  stealth:
+    weight: 0.15
+    min_window: 12
+    max_window: 168
+    min_history_hours: 48
