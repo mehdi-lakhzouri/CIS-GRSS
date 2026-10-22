@@ -1,0 +1,44 @@
+[project]
+name = "attack-engine"
+version = "0.1.0"
+description = "Controlled false-data-injection research engine for environmental sensor data (TSYP14, Track 2). Phase 1: dataset foundation."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "pandas>=3.0",
+    "pyarrow>=17",
+    "pydantic>=2.8",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+attack-engine = "attack_engine.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.25,<0.12"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "N", "C4", "PTH", "BLE"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["attack_engine"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+markers = [
+    "real_dataset: read-only checks against the real USCRN delivery (opt-in via ATTACK_ENGINE_REAL_DATASET)",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.6",
+]

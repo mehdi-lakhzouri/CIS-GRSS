@@ -1,0 +1,37 @@
+# Attack Engine - dataset configuration (Phase 1).
+#
+# Expectations for the known reference delivery USCRN_livraison/data/uscrn_clean.parquet
+# (cleaned NOAA/NCEI USCRN Hourly02, six stations, 2022-2025). They describe that one
+# file and are not universal properties of USCRN data. Generic rules (columns, types,
+# units, ranges, keys, timestamp semantics) live in attack_engine.dataset.schema.
+
+# SHA-256 of the reference delivery. Set to null to skip the comparison.
+expected_sha256: 46b98115424bb03af28d31bcb96b68fedd537a609bf97d4199a653a376b98421
+
+validation_profile:
+  name: uscrn-reference-delivery
+  expected_row_count: 210384
+  expected_column_count: 23
+  expected_stations:
+    - AZ_Tucson_11_W
+    - CA_Fallbrook_5_NE
+    - MS_Newton_5_ENE
+    - NY_Ithaca_13_E
+    - OK_Goodwell_2_E
+    - OK_Goodwell_2_SE
+  require_complete_years: true
+  allow_temporal_gaps: false
+
+# Planned chronological partitions (validation metadata only; nothing is split or exported).
+# Bounds apply to the measured interval: start <= time - 1h < end, i.e. start < time <= end.
+# The record stamped 2026-01-01T00:00:00Z closes the last hour of 2025 and belongs to "test".
+partitions:
+  - name: train
+    start: "2022-01-01T00:00:00Z"
+    end: "2024-01-01T00:00:00Z"
+  - name: validation
+    start: "2024-01-01T00:00:00Z"
+    end: "2025-01-01T00:00:00Z"
+  - name: test
+    start: "2025-01-01T00:00:00Z"
+    end: "2026-01-01T00:00:00Z"

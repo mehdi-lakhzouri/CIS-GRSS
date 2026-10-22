@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Environments and secrets
+.venv/
+venv/
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_ed25519*
+id_rsa*
+secrets/
+keys/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Datasets: keep the folder layout, never the data
+datasets/raw/*
+datasets/processed/*
+datasets/generated/*
+!datasets/*/.gitkeep
+*.parquet
+*.csv
+
+# Reports and logs
+reports/
+*.log
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
