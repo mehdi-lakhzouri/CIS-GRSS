@@ -1,0 +1,659 @@
+{
+  "export_summary": {
+    "campaigns": {
+      "bias": {
+        "applied_events": 19,
+        "budget_unit": "cells",
+        "cell_ground_truth_row_count": 631152,
+        "committed_budget": 1902,
+        "detector_release_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\bias\\detector",
+        "evaluable_cell_count": 618970,
+        "evaluable_row_count": 210257,
+        "execution_reproducible": true,
+        "execution_sha256": "9449b59202ae03571d2547857ae2b0cb6664ae457b9141e396ba48ac15e53c79",
+        "file_sha256": {
+          "HANDOVER.md": "f41995893b18f949495b5c761e59ced791b502e05ae2017bd81baf3eea7168d6",
+          "attack_manifest.csv": "0807d0545fd2d1fa1b204b5b54f08c947923ed05443ab57284bc98fbf269928a",
+          "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/HANDOVER.md": "c159289607512e358e037c360617131af746045e78a5ff21f4648aa2d25c1ecc",
+          "detector/SHA256SUMS.txt": "6470492a3849be22a691005399ed1c4fcae7bff3c909344ed8da3042db183f66",
+          "detector/cell_labels.parquet": "71141dbfc9dd6b58d4b4be68ce9a5dca907195b3164bbbff4416e24b058ea66b",
+          "detector/data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/detector_input.parquet": "a83c107e6c094db6d8b544692fc344e2726262b4006716477d002830fac5d4bc",
+          "detector/row_labels.parquet": "e52fe0b96b91be457afd2c0fa2207eeba8fda6b9f7d890958ef1db37d0f182c1",
+          "detector_input.parquet": "a83c107e6c094db6d8b544692fc344e2726262b4006716477d002830fac5d4bc",
+          "ground_truth.parquet": "8b3068f5a0409925b7bf3c1adb3fdb6c3ccff501f67fc46e47132093d0275df5",
+          "ground_truth_cells.parquet": "022fe3e9a949236de34b86b563a848cba85a23e00ce0a337394927e8dcf3b1fa",
+          "run_provenance.json": "ee7f00a88951a57ad306e203a7a304805b3ff22ebd9d478bd6f334e26154e0f2",
+          "uscrn_attacked.parquet": "0e36ba51dcd9fe8806dc98e978b2723c09a2e2af6f95a0d681c80b257d265201"
+        },
+        "finite_target_count": 204983,
+        "generated_at": "2026-10-23T17:57:05.918952Z",
+        "manifest_row_count": 37,
+        "missing_target_count": 5401,
+        "modified_cells": 1902,
+        "modified_count": 634,
+        "modified_rows": 634,
+        "per_family": [
+          {
+            "allocated": 3108,
+            "applied_windows": 19,
+            "committed": 1902,
+            "deficit": 1128,
+            "family": "bias",
+            "modified_cells": 1902,
+            "modified_rows": 634,
+            "per_variable_modifications": {
+              "P_CALC": 634,
+              "SOIL_MOISTURE_10": 634,
+              "SOIL_MOISTURE_5": 634
+            },
+            "planned_windows": 37,
+            "quota_deficit": 1206,
+            "rejected_windows": 18,
+            "reserved": 3030
+          }
+        ],
+        "per_family_committed": {
+          "bias": 1902
+        },
+        "per_partition": {
+          "test": {
+            "modified_cells": 792,
+            "modified_rows": 264
+          },
+          "train": {
+            "modified_cells": 0,
+            "modified_rows": 0
+          },
+          "validation": {
+            "modified_cells": 1110,
+            "modified_rows": 370
+          }
+        },
+        "per_variable_modifications": {
+          "P_CALC": 634,
+          "SOIL_MOISTURE_10": 634,
+          "SOIL_MOISTURE_5": 634
+        },
+        "planned_events": 37,
+        "quota_deficit": 1206,
+        "rejected_events": 18,
+        "requested_quota": 3108,
+        "reserved_capacity": 3030,
+        "root_checksums_sha256": "9028bb6022de8301ab499b09f6a730fe883f5c385a1b59f46a337b21ad126288",
+        "row_count": 210384,
+        "run_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\bias",
+        "run_id": "bias",
+        "target_columns": [
+          "SOIL_MOISTURE_5",
+          "SOIL_MOISTURE_10",
+          "P_CALC"
+        ],
+        "train_preserved": true,
+        "validation_messages": [],
+        "validation_passed": true
+      },
+      "combined": {
+        "applied_events": 152,
+        "budget_unit": "cells",
+        "cell_ground_truth_row_count": 631152,
+        "committed_budget": 3597,
+        "detector_release_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\combined\\detector",
+        "evaluable_cell_count": 618970,
+        "evaluable_row_count": 210257,
+        "execution_reproducible": true,
+        "execution_sha256": "fe73505a1e12546c5ab06de2d0a484c6a3e3312e27333eef1b5eec7589557f35",
+        "file_sha256": {
+          "HANDOVER.md": "ffc94fab5e2bfe23e275439e854dd97e1f8a88c245c204d0905da757b1906494",
+          "attack_manifest.csv": "05c3fdba11ad5c15469cdab6a6d6d364f5bc67f0ddeb06d8b76d0c87e9ae542d",
+          "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/HANDOVER.md": "c159289607512e358e037c360617131af746045e78a5ff21f4648aa2d25c1ecc",
+          "detector/SHA256SUMS.txt": "cdb454597c7951c227d76da2d497a0050729c058934d42294a980f3c8031990d",
+          "detector/cell_labels.parquet": "a542cb30cdd15c0901fd43381b9c01f848768571c50f87f8785c5b1ea4bcd271",
+          "detector/data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/detector_input.parquet": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+          "detector/row_labels.parquet": "dae29c6c6dbbce7a237853f0146b4c9212a564833633f6088a1141588dc6f906",
+          "detector_input.parquet": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+          "ground_truth.parquet": "c7fb8453558791c6380ac7d05828d63989439ec1beebcc798bc9bca6dbaea137",
+          "ground_truth_cells.parquet": "4f0e778694ac93fcf7545a7be5cb0fe51dfd95011087e6a799395ddc704b3a21",
+          "run_provenance.json": "c87df06e5cdaaa8669feda1f5f09129806f14fd137ad722ff8871bbed269aa5e",
+          "uscrn_attacked.parquet": "7c9426ab7f9f86a4c9ea65f28fdb09c8128eeff63acbbbd1b7753d2209ce50dd"
+        },
+        "finite_target_count": 204983,
+        "generated_at": "2026-10-23T17:58:49.944082Z",
+        "manifest_row_count": 356,
+        "missing_target_count": 5401,
+        "modified_cells": 3597,
+        "modified_count": 1342,
+        "modified_rows": 1342,
+        "per_family": [
+          {
+            "allocated": 2486,
+            "applied_windows": 117,
+            "committed": 638,
+            "deficit": 1840,
+            "family": "spike",
+            "modified_cells": 638,
+            "modified_rows": 213,
+            "per_variable_modifications": {
+              "P_CALC": 212,
+              "SOIL_MOISTURE_10": 213,
+              "SOIL_MOISTURE_5": 213
+            },
+            "planned_windows": 248,
+            "quota_deficit": 1848,
+            "rejected_windows": 131,
+            "reserved": 2478
+          },
+          {
+            "allocated": 2487,
+            "applied_windows": 9,
+            "committed": 816,
+            "deficit": 1593,
+            "family": "bias",
+            "modified_cells": 816,
+            "modified_rows": 272,
+            "per_variable_modifications": {
+              "P_CALC": 272,
+              "SOIL_MOISTURE_10": 272,
+              "SOIL_MOISTURE_5": 272
+            },
+            "planned_windows": 29,
+            "quota_deficit": 1671,
+            "rejected_windows": 20,
+            "reserved": 2409
+          },
+          {
+            "allocated": 2487,
+            "applied_windows": 7,
+            "committed": 1020,
+            "deficit": 1038,
+            "family": "drift",
+            "modified_cells": 1020,
+            "modified_rows": 340,
+            "per_variable_modifications": {
+              "P_CALC": 340,
+              "SOIL_MOISTURE_10": 340,
+              "SOIL_MOISTURE_5": 340
+            },
+            "planned_windows": 16,
+            "quota_deficit": 1467,
+            "rejected_windows": 9,
+            "reserved": 2058
+          },
+          {
+            "allocated": 2487,
+            "applied_windows": 13,
+            "committed": 860,
+            "deficit": 1528,
+            "family": "replay",
+            "modified_cells": 860,
+            "modified_rows": 388,
+            "per_variable_modifications": {
+              "P_CALC": 95,
+              "SOIL_MOISTURE_10": 381,
+              "SOIL_MOISTURE_5": 384
+            },
+            "planned_windows": 38,
+            "quota_deficit": 1627,
+            "rejected_windows": 25,
+            "reserved": 2388
+          },
+          {
+            "allocated": 2486,
+            "applied_windows": 6,
+            "committed": 263,
+            "deficit": 2020,
+            "family": "stealth",
+            "modified_cells": 263,
+            "modified_rows": 129,
+            "per_variable_modifications": {
+              "P_CALC": 11,
+              "SOIL_MOISTURE_10": 123,
+              "SOIL_MOISTURE_5": 129
+            },
+            "planned_windows": 25,
+            "quota_deficit": 2223,
+            "rejected_windows": 19,
+            "reserved": 2283
+          }
+        ],
+        "per_family_committed": {
+          "bias": 816,
+          "drift": 1020,
+          "replay": 860,
+          "spike": 638,
+          "stealth": 263
+        },
+        "per_partition": {
+          "test": {
+            "modified_cells": 1688,
+            "modified_rows": 632
+          },
+          "train": {
+            "modified_cells": 0,
+            "modified_rows": 0
+          },
+          "validation": {
+            "modified_cells": 1909,
+            "modified_rows": 710
+          }
+        },
+        "per_variable_modifications": {
+          "P_CALC": 930,
+          "SOIL_MOISTURE_10": 1329,
+          "SOIL_MOISTURE_5": 1338
+        },
+        "planned_events": 356,
+        "quota_deficit": 8836,
+        "rejected_events": 204,
+        "requested_quota": 12433,
+        "reserved_capacity": 11616,
+        "root_checksums_sha256": "2b3967aa93e5414b466550a411e35d5f0065307b85d7fb953375f97f5f5e0029",
+        "row_count": 210384,
+        "run_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\combined",
+        "run_id": "combined",
+        "target_columns": [
+          "SOIL_MOISTURE_5",
+          "SOIL_MOISTURE_10",
+          "P_CALC"
+        ],
+        "train_preserved": true,
+        "validation_messages": [],
+        "validation_passed": true
+      },
+      "drift": {
+        "applied_events": 8,
+        "budget_unit": "cells",
+        "cell_ground_truth_row_count": 631152,
+        "committed_budget": 792,
+        "detector_release_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\drift\\detector",
+        "evaluable_cell_count": 618970,
+        "evaluable_row_count": 210257,
+        "execution_reproducible": true,
+        "execution_sha256": "73b41e2fd8532d4cb9671444e3a3dc03fddf1ab5175bfa86f88d6ccffc0c63d8",
+        "file_sha256": {
+          "HANDOVER.md": "c2215b6f95fd729ebc70286baa252b1c588e3ad46feb0cadae24923198de81be",
+          "attack_manifest.csv": "53e02b2d173571795f6f3cd8fbdbc928e67693d9b7046543425746145f469008",
+          "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/HANDOVER.md": "c159289607512e358e037c360617131af746045e78a5ff21f4648aa2d25c1ecc",
+          "detector/SHA256SUMS.txt": "229c9c4ffac71006aaf2803e5cda9d24f31e15672700bf0d54b721eee003ba4a",
+          "detector/cell_labels.parquet": "927d0088cfc07598c2eb73797fe09f4e2bfd05533fdfc3b0cb2a80cce52a9a3b",
+          "detector/data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/detector_input.parquet": "0256ae9c4beb274da9c8f903a45040e566c91cca2e68d0964c02ecf49c614735",
+          "detector/row_labels.parquet": "36fd95d54ffa6503a130ca201aa186e57da08b83afc04cd44f624cbfe611555b",
+          "detector_input.parquet": "0256ae9c4beb274da9c8f903a45040e566c91cca2e68d0964c02ecf49c614735",
+          "ground_truth.parquet": "dd4174a782a73a5c276de33e1ac25c898f630a0f8136ca9ccf8256c16dc08214",
+          "ground_truth_cells.parquet": "0ce7062ab50e445e90a9856255398a5b992fba2891a43fbeb87adac1dbb4337c",
+          "run_provenance.json": "1be8d0b1280bcfffceea9923f9a601f5bdb3207e11cd5bfb2e95571083e4fe42",
+          "uscrn_attacked.parquet": "be02817b4d1b7bb6fe81f4cc9a107c18a078ae7de63ed40b0604daf0c9c06c4f"
+        },
+        "finite_target_count": 204983,
+        "generated_at": "2026-10-23T17:57:27.216569Z",
+        "manifest_row_count": 24,
+        "missing_target_count": 5401,
+        "modified_cells": 792,
+        "modified_count": 264,
+        "modified_rows": 264,
+        "per_family": [
+          {
+            "allocated": 3108,
+            "applied_windows": 8,
+            "committed": 792,
+            "deficit": 2091,
+            "family": "drift",
+            "modified_cells": 792,
+            "modified_rows": 264,
+            "per_variable_modifications": {
+              "P_CALC": 264,
+              "SOIL_MOISTURE_10": 264,
+              "SOIL_MOISTURE_5": 264
+            },
+            "planned_windows": 24,
+            "quota_deficit": 2316,
+            "rejected_windows": 16,
+            "reserved": 2883
+          }
+        ],
+        "per_family_committed": {
+          "drift": 792
+        },
+        "per_partition": {
+          "test": {
+            "modified_cells": 495,
+            "modified_rows": 165
+          },
+          "train": {
+            "modified_cells": 0,
+            "modified_rows": 0
+          },
+          "validation": {
+            "modified_cells": 297,
+            "modified_rows": 99
+          }
+        },
+        "per_variable_modifications": {
+          "P_CALC": 264,
+          "SOIL_MOISTURE_10": 264,
+          "SOIL_MOISTURE_5": 264
+        },
+        "planned_events": 24,
+        "quota_deficit": 2316,
+        "rejected_events": 16,
+        "requested_quota": 3108,
+        "reserved_capacity": 2883,
+        "root_checksums_sha256": "143e266bcc1eaa7cdbf4efc4b2b29a94e110c7ab0212fed83d76d78955563403",
+        "row_count": 210384,
+        "run_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\drift",
+        "run_id": "drift",
+        "target_columns": [
+          "SOIL_MOISTURE_5",
+          "SOIL_MOISTURE_10",
+          "P_CALC"
+        ],
+        "train_preserved": true,
+        "validation_messages": [],
+        "validation_passed": true
+      },
+      "replay": {
+        "applied_events": 15,
+        "budget_unit": "cells",
+        "cell_ground_truth_row_count": 631152,
+        "committed_budget": 1057,
+        "detector_release_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\replay\\detector",
+        "evaluable_cell_count": 618970,
+        "evaluable_row_count": 210257,
+        "execution_reproducible": true,
+        "execution_sha256": "d152ce775c41ab5ee05c06059200cc180c20da6866020d3e61114bf60a733d18",
+        "file_sha256": {
+          "HANDOVER.md": "1d805a29b52fe844b147b644522c147570ee237be1e4e176dca7f1ff87d6697f",
+          "attack_manifest.csv": "cf596d5fc760b03b3a538d067a8bc18cf99d15f30e8528287a02a94e573cb5e8",
+          "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/HANDOVER.md": "c159289607512e358e037c360617131af746045e78a5ff21f4648aa2d25c1ecc",
+          "detector/SHA256SUMS.txt": "1cffb7ee0f91fb0d10094120eec81ae8290dbd26c64cce210b4c0168295e86bf",
+          "detector/cell_labels.parquet": "beef5cf13018569c3bc36f8e2804407dda22f8f3ac62a5bdb34f9ff9c89a366d",
+          "detector/data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/detector_input.parquet": "61f91330e394a2d1917e0ccfed68e2b7699cddc076617e85fde8275bca91af2a",
+          "detector/row_labels.parquet": "cb90cce4f38ad16df92648583e11d35e5ce4c0bb7b08cb72b8000a71d5e33551",
+          "detector_input.parquet": "61f91330e394a2d1917e0ccfed68e2b7699cddc076617e85fde8275bca91af2a",
+          "ground_truth.parquet": "b59f47930b353842de429c115329e4b696cd652e553351a324092d5eca7e1981",
+          "ground_truth_cells.parquet": "0d543594cd6cdf08a7b165e63501456567075a4014290dc5730c3fb1f99b7d61",
+          "run_provenance.json": "e8e23f9581e9a1ecb8e3186ca988c20f6e6ae5001f0296e66d80b72fde5eb65a",
+          "uscrn_attacked.parquet": "59995bcb08d2d86f73abfad0a078059b1a15a47b9e471f12c3f67c8ec256ccbd"
+        },
+        "finite_target_count": 204983,
+        "generated_at": "2026-10-23T17:57:56.768866Z",
+        "manifest_row_count": 46,
+        "missing_target_count": 5401,
+        "modified_cells": 1057,
+        "modified_count": 475,
+        "modified_rows": 475,
+        "per_family": [
+          {
+            "allocated": 3108,
+            "applied_windows": 15,
+            "committed": 1057,
+            "deficit": 1949,
+            "family": "replay",
+            "modified_cells": 1057,
+            "modified_rows": 475,
+            "per_variable_modifications": {
+              "P_CALC": 117,
+              "SOIL_MOISTURE_10": 468,
+              "SOIL_MOISTURE_5": 472
+            },
+            "planned_windows": 46,
+            "quota_deficit": 2051,
+            "rejected_windows": 31,
+            "reserved": 3006
+          }
+        ],
+        "per_family_committed": {
+          "replay": 1057
+        },
+        "per_partition": {
+          "test": {
+            "modified_cells": 508,
+            "modified_rows": 231
+          },
+          "train": {
+            "modified_cells": 0,
+            "modified_rows": 0
+          },
+          "validation": {
+            "modified_cells": 549,
+            "modified_rows": 244
+          }
+        },
+        "per_variable_modifications": {
+          "P_CALC": 117,
+          "SOIL_MOISTURE_10": 468,
+          "SOIL_MOISTURE_5": 472
+        },
+        "planned_events": 46,
+        "quota_deficit": 2051,
+        "rejected_events": 31,
+        "requested_quota": 3108,
+        "reserved_capacity": 3006,
+        "root_checksums_sha256": "96ee4bcaf64d6cf8fe77dd336aec88a261cc28c56dad8c1f4881e075489e2f82",
+        "row_count": 210384,
+        "run_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\replay",
+        "run_id": "replay",
+        "target_columns": [
+          "SOIL_MOISTURE_5",
+          "SOIL_MOISTURE_10",
+          "P_CALC"
+        ],
+        "train_preserved": true,
+        "validation_messages": [],
+        "validation_passed": true
+      },
+      "spike": {
+        "applied_events": 149,
+        "budget_unit": "cells",
+        "cell_ground_truth_row_count": 631152,
+        "committed_budget": 798,
+        "detector_release_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\spike\\detector",
+        "evaluable_cell_count": 618970,
+        "evaluable_row_count": 210257,
+        "execution_reproducible": true,
+        "execution_sha256": "43b9faa48e3060bd588567d72906cd6f79c097c370f65a8bcfa1f376c7dff5cb",
+        "file_sha256": {
+          "HANDOVER.md": "f37778de745fb90f04323c758d7c365b1b286a460fb2eeadf5372438c55e2676",
+          "attack_manifest.csv": "b9b1e369703f63c01d9fa639b4f70875d58e69593c2b5bbe655e2f78ffd3c04d",
+          "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/HANDOVER.md": "c159289607512e358e037c360617131af746045e78a5ff21f4648aa2d25c1ecc",
+          "detector/SHA256SUMS.txt": "d6f5359a4d97abf5f5fa7fb34be09bb398852884e74b7081f6b3791d6690c557",
+          "detector/cell_labels.parquet": "0cc06df19a380f6b1beff57ee5a5e97ba0f5590fcb80a4d703cba24d52a81729",
+          "detector/data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/detector_input.parquet": "c281eef40d8d5d5feb72fdda76d81f38fc2ad3cc839cc9ee944ad53129da8125",
+          "detector/row_labels.parquet": "e8ca6f671417a22a586971fd848c5974bd282157e1138a66ccaecec18717b64c",
+          "detector_input.parquet": "c281eef40d8d5d5feb72fdda76d81f38fc2ad3cc839cc9ee944ad53129da8125",
+          "ground_truth.parquet": "aac0530c706da7109895bc4036260c4fbf7a4f329287898f3b3ffadccc6c290d",
+          "ground_truth_cells.parquet": "c1e489548dfb50c0fbb6d62684e2675382dec71989c4ffc6c054a1ea8ba62a57",
+          "run_provenance.json": "1c1c25e8ffb34aad7ff9b93224d6726691be84f92162404d693f8e5a6ec1e42a",
+          "uscrn_attacked.parquet": "1fe5313fa3f968d374136d04cd429cb207ff51c8e56737aaca77efa823a71a1a"
+        },
+        "finite_target_count": 204983,
+        "generated_at": "2026-10-23T17:56:44.132900Z",
+        "manifest_row_count": 308,
+        "missing_target_count": 5401,
+        "modified_cells": 798,
+        "modified_count": 266,
+        "modified_rows": 266,
+        "per_family": [
+          {
+            "allocated": 3108,
+            "applied_windows": 149,
+            "committed": 798,
+            "deficit": 2292,
+            "family": "spike",
+            "modified_cells": 798,
+            "modified_rows": 266,
+            "per_variable_modifications": {
+              "P_CALC": 266,
+              "SOIL_MOISTURE_10": 266,
+              "SOIL_MOISTURE_5": 266
+            },
+            "planned_windows": 308,
+            "quota_deficit": 2310,
+            "rejected_windows": 159,
+            "reserved": 3090
+          }
+        ],
+        "per_family_committed": {
+          "spike": 798
+        },
+        "per_partition": {
+          "test": {
+            "modified_cells": 453,
+            "modified_rows": 151
+          },
+          "train": {
+            "modified_cells": 0,
+            "modified_rows": 0
+          },
+          "validation": {
+            "modified_cells": 345,
+            "modified_rows": 115
+          }
+        },
+        "per_variable_modifications": {
+          "P_CALC": 266,
+          "SOIL_MOISTURE_10": 266,
+          "SOIL_MOISTURE_5": 266
+        },
+        "planned_events": 308,
+        "quota_deficit": 2310,
+        "rejected_events": 159,
+        "requested_quota": 3108,
+        "reserved_capacity": 3090,
+        "root_checksums_sha256": "b27a5fb9a171657ad0cb6c7e4df0e0ee936d8b42c3afbf3c47dd2feb0aa250b2",
+        "row_count": 210384,
+        "run_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\spike",
+        "run_id": "spike",
+        "target_columns": [
+          "SOIL_MOISTURE_5",
+          "SOIL_MOISTURE_10",
+          "P_CALC"
+        ],
+        "train_preserved": true,
+        "validation_messages": [],
+        "validation_passed": true
+      },
+      "stealth": {
+        "applied_events": 16,
+        "budget_unit": "cells",
+        "cell_ground_truth_row_count": 631152,
+        "committed_budget": 969,
+        "detector_release_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\stealth\\detector",
+        "evaluable_cell_count": 618970,
+        "evaluable_row_count": 210257,
+        "execution_reproducible": true,
+        "execution_sha256": "cf467fbc3065e73780acb34bf6b667bb8855c20fcb181235b595174e86835a29",
+        "file_sha256": {
+          "HANDOVER.md": "775c63287b1225eee867da6d4a060eb574bde0ade7780052c6341de7fcbeb9ab",
+          "attack_manifest.csv": "c1ecd961aac6ca7ff46aa68bd9da86ecae1b4f6b174ebdeea6cc1f08666b3bc6",
+          "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/HANDOVER.md": "c159289607512e358e037c360617131af746045e78a5ff21f4648aa2d25c1ecc",
+          "detector/SHA256SUMS.txt": "547400a8ebcb7d76a13127d6ae6fa836a96f92b6439d3406beb0e7ade9e331ab",
+          "detector/cell_labels.parquet": "f655f17fef6b532cbb988bfc6044d89b604b32f62cd57bbff9f44282b79a52db",
+          "detector/data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd",
+          "detector/detector_input.parquet": "2ec5205ab0e7e5cb37322564babf57b6ff8f6e1c7d948d4953feb4646e31bd7e",
+          "detector/row_labels.parquet": "582af12922f50c07a9b0ec5999635a8b39ccddca8f3a7d7f1deb1824a64d0a78",
+          "detector_input.parquet": "2ec5205ab0e7e5cb37322564babf57b6ff8f6e1c7d948d4953feb4646e31bd7e",
+          "ground_truth.parquet": "206ca1012d9363cfd8020da7c02de64e286e368aae14efc8773a3fb37c99e83f",
+          "ground_truth_cells.parquet": "4db78cea9ff41e9d252ff947e92718550256a5c756c57792b5c579e73498a290",
+          "run_provenance.json": "d74ea1e3b1019e6485a298d6aeb96a658adce91a36af25dd1dc07791c8e5deac",
+          "uscrn_attacked.parquet": "69854950ccfb6a5782c72721d63e6b31b3da3314ee4008604614ddab3921a4b2"
+        },
+        "finite_target_count": 204983,
+        "generated_at": "2026-10-23T17:58:15.251077Z",
+        "manifest_row_count": 33,
+        "missing_target_count": 5401,
+        "modified_cells": 969,
+        "modified_count": 477,
+        "modified_rows": 477,
+        "per_family": [
+          {
+            "allocated": 3108,
+            "applied_windows": 16,
+            "committed": 969,
+            "deficit": 1992,
+            "family": "stealth",
+            "modified_cells": 969,
+            "modified_rows": 477,
+            "per_variable_modifications": {
+              "P_CALC": 31,
+              "SOIL_MOISTURE_10": 461,
+              "SOIL_MOISTURE_5": 477
+            },
+            "planned_windows": 33,
+            "quota_deficit": 2139,
+            "rejected_windows": 17,
+            "reserved": 2961
+          }
+        ],
+        "per_family_committed": {
+          "stealth": 969
+        },
+        "per_partition": {
+          "test": {
+            "modified_cells": 715,
+            "modified_rows": 352
+          },
+          "train": {
+            "modified_cells": 0,
+            "modified_rows": 0
+          },
+          "validation": {
+            "modified_cells": 254,
+            "modified_rows": 125
+          }
+        },
+        "per_variable_modifications": {
+          "P_CALC": 31,
+          "SOIL_MOISTURE_10": 461,
+          "SOIL_MOISTURE_5": 477
+        },
+        "planned_events": 33,
+        "quota_deficit": 2139,
+        "rejected_events": 17,
+        "requested_quota": 3108,
+        "reserved_capacity": 2961,
+        "root_checksums_sha256": "f7f5fecfa3f2d1aff0b91b9d13ee3b2dd21b9db64ed7ec31dc555775cf643473",
+        "row_count": 210384,
+        "run_dir": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\stealth",
+        "run_id": "stealth",
+        "target_columns": [
+          "SOIL_MOISTURE_5",
+          "SOIL_MOISTURE_10",
+          "P_CALC"
+        ],
+        "train_preserved": true,
+        "validation_messages": [],
+        "validation_passed": true
+      }
+    },
+    "detector_release_policy": "release only detector/; hold test truth until freeze",
+    "group_directory": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07",
+    "protected_file_count": 65,
+    "protected_files_unchanged": true,
+    "source_sha256": "46b98115424bb03af28d31bcb96b68fedd537a609bf97d4199a653a376b98421"
+  },
+  "export_summary_sha256": "4f6941ecc0d5b0bfcdebdc8323b6df9329a1c0bae6754a1785cce0f492ab69b3",
+  "group_checksums_sha256": "f292a485edc686b33ba9664486518d3aef5dd4397368d639441dae181ceb0c8d",
+  "validation": {
+    "engine_source_hashes_match_all_six_exports": true,
+    "prior_export_files_unchanged": 8,
+    "protected_files_unchanged": 65,
+    "pytest_passed": 544,
+    "pytest_seconds": 357.74,
+    "pytest_skipped": 0,
+    "real_dataset_cases": 16,
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "source_and_export_checksum_inventories_verified": true
+  }
+}
