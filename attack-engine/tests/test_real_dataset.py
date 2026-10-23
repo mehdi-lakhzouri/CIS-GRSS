@@ -22,6 +22,8 @@ from attack_engine.dataset.loader import DatasetLoader
 from attack_engine.dataset.profiler import DatasetProfiler
 from attack_engine.dataset.schema import uscrn_hourly_schema
 from attack_engine.dataset.validator import DatasetValidator
+from attack_engine.exporting.builder import build_cell_ground_truth
+from attack_engine.exporting.contracts import VARIABLE_GROUND_TRUTH_COLUMNS
 from attack_engine.exporting.models import ExportConfiguration
 from attack_engine.exporting.pipeline import export_run
 from attack_engine.scheduling.budget import ReservationStatus
@@ -176,6 +178,8 @@ def test_reference_delivery_execution_is_reproducible_and_read_only() -> None:
     # Fixed reference delivery and checked-in seed/configuration: the audited regression.
     assert (drift.applied_windows, drift.reserved, drift.committed) == (42, 2882, 2839)
     assert summary_a.committed_total == 8989 + stealth.committed == len(modified_labels)
+    assert summary_a.committed_total == 9679
+    assert stealth.committed == 690
     clean_target = snapshot[schema.target_column]
     final_mask = np.isfinite(clean_target) & np.isfinite(observed) & (observed != clean_target)
     assert int(final_mask.sum()) == summary_a.committed_total
@@ -275,6 +279,10 @@ def test_reference_delivery_export_reconciles_with_execution(tmp_path: Path) -> 
     assert result.row_count == dataset.metadata.row_count == 210384
     assert result.missing_target_count == 5401
     assert result.modified_count == summary.committed_total == 9679
+    # Multi-target foundation: the single-target run modifies one cell per attacked row, so
+    # cells and distinct rows both equal the committed total; the stealth family contributes.
+    assert summary.committed_cells == summary.committed_rows == 9679
+    assert summary.per_family[AttackFamily.STEALTH].committed > 0
     assert result.validation_passed, result.validation_messages
 
     ground_truth = pd.read_parquet(result.run_dir / "ground_truth.parquet")
@@ -295,4 +303,75 @@ def test_reference_delivery_export_reconciles_with_execution(tmp_path: Path) -> 
             audit[column].reset_index(drop=True), dataset.frame[column].reset_index(drop=True)
         )
 
+    # Multi-target foundation: variable-level ground truth projects the single target.
+    cells = build_cell_ground_truth(ground_truth, schema.target_column)
+    assert tuple(cells.columns) == VARIABLE_GROUND_TRUTH_COLUMNS
+    assert len(cells) == 9679
+    assert set(cells["column"].unique()) == {schema.target_column}
+
+    assert sha256_file(path) == digest_before == dataset.source_sha256
+
+
+@pytest.mark.parametrize("family", tuple(AttackFamily))
+def test_all_multivariable_families_on_real_dataset_are_read_only_and_deterministic(family) -> None:
+    path = Path(str(_REAL_PATH))
+    config = load_config(PROJECT_CONFIG)
+    schema = uscrn_hourly_schema()
+    campaigns = _CONFIG_DIR / "campaigns" / family.value
+    scheduling = load_scheduling_config(campaigns / "scheduling.yaml")
+    attack_config = load_attack_config(campaigns / "attacks.yaml")
+    digest_before = sha256_file(path)
+
+    dataset = DatasetLoader(schema).load(path)
+    snapshot = dataset.frame.copy(deep=True)
+    scheduler = AttackWindowScheduler(schema, config.partitions, scheduling)
+    executor = AttackExecutor(schema, config.partitions, attack_config)
+    first = executor.execute(dataset.frame, scheduler.plan(dataset.frame))
+    second = executor.execute(dataset.frame, scheduler.plan(dataset.frame))
+
+    family_summary = first.per_family[family]
+    assert family_summary.applied_windows > 0
+    assert first.committed_total == first.committed_cells > first.committed_rows
+    assert first.committed_cells <= first.reserved_before <= first.requested_quota
+    assert first.committed_cells <= scheduling.max_modified_cells
+    assert first.committed_rows <= scheduling.max_modified_rows
+    assert family_summary.committed == first.committed_total
+    assert sum(first.per_variable_modifications.values()) == first.committed_cells
+    assert first.per_variable_modifications == second.per_variable_modifications
+    assert first.skipped_families == ()
+    assert len(first.results) == len(second.results)
+    written = set()
+    for result, repeated in zip(first.results, second.results, strict=True):
+        assert result.window_id == repeated.window_id
+        assert result.status == repeated.status
+        assert result.rejection_reason == repeated.rejection_reason
+        assert result.partition in ("validation", "test")
+        assert result.changed_variables == (
+            result.resolved_target_columns if result.applied else ()
+        )
+        assert written.isdisjoint(result.modified_cell_keys())
+        written.update(result.modified_cell_keys())
+        for column, repeated_column in zip(result.columns, repeated.columns, strict=True):
+            clean, final = np.asarray(column.clean_values), np.asarray(column.candidate_values)
+            np.testing.assert_array_equal(final, repeated_column.candidate_values)
+            np.testing.assert_array_equal(
+                clean, snapshot.loc[list(column.row_labels), column.column]
+            )
+            mask = np.isfinite(clean) & np.isfinite(final) & (clean != final)
+            np.testing.assert_array_equal(mask, column.changed_mask)
+            np.testing.assert_array_equal(np.isnan(clean), np.isnan(final))
+            assert (final[mask] >= 0).all()
+            assert (final[mask] <= (200 if column.column == "P_CALC" else 0.7)).all()
+            if result.family is AttackFamily.REPLAY and result.applied:
+                source = result.replay_source
+                assert source.last_time < pd.Timestamp(
+                    snapshot.loc[result.row_labels[0], "time"], tz="UTC"
+                )
+                source_values = snapshot.loc[list(source.row_labels), column.column].to_numpy()
+                np.testing.assert_array_equal(
+                    final[np.isfinite(clean)], source_values[np.isfinite(clean)]
+                )
+    assert len(written) == first.committed_cells
+
+    pd.testing.assert_frame_equal(dataset.frame, snapshot, check_exact=True)
     assert sha256_file(path) == digest_before == dataset.source_sha256

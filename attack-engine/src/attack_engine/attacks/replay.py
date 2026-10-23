@@ -13,7 +13,7 @@ from datetime import datetime
 
 import numpy as np
 
-from attack_engine.attacks import base
+from attack_engine.attacks import base, multitarget
 from attack_engine.attacks.config import ReplayParameters
 from attack_engine.attacks.models import (
     AttackRejectionReason,
@@ -31,7 +31,9 @@ def _age_hours(dest_first: datetime, source_first: datetime) -> float:
     return (dest_first - source_first).total_seconds() / 3600.0
 
 
-def _source_candidates(request: AttackRequest, params: ReplayParameters) -> list[_Candidate]:
+def _source_candidates(
+    request: AttackRequest, params: ReplayParameters, settings: AttackSettings
+) -> list[_Candidate]:
     history = request.history
     length = request.length
     dest_first = request.window.first_observation_time
@@ -39,12 +41,34 @@ def _source_candidates(request: AttackRequest, params: ReplayParameters) -> list
     if history is None:
         return candidates
     for run_index, times in enumerate(history.run_times):
+        valid_starts = None
+        if params.target_columns != ("SOIL_MOISTURE_5",):
+            valid_rows = np.ones(len(times), dtype=bool)
+            for index, column in enumerate(params.target_columns):
+                runs = history.run_values if index == 0 else history.run_secondary.get(column)
+                if runs is None:
+                    valid_rows[:] = False
+                    break
+                values = np.asarray(runs[run_index])
+                bounds = multitarget.settings_for(column, settings).bounds
+                valid_rows &= np.isfinite(values) & (values >= bounds.low) & (values <= bounds.high)
+            invalid_prefix = np.r_[0, np.cumsum(~valid_rows)]
+            valid_starts = invalid_prefix[length:] == invalid_prefix[:-length]
         for start in range(len(times) - length + 1):
             source_first = times[start]
             source_last = times[start + length - 1]
             if source_last >= dest_first:
                 break  # later starts in this run are no earlier; stop scanning it
             if _age_hours(dest_first, source_first) >= params.min_age_hours:
+                if valid_starts is not None:
+                    if not valid_starts[start]:
+                        continue
+                    source_times = times[start : start + length]
+                    elapsed = tuple(
+                        (time - source_first).total_seconds() / 3600 for time in source_times
+                    )
+                    if elapsed != request.elapsed_hours:
+                        continue
                 candidates.append((run_index, start, source_first))
     candidates.sort(key=lambda item: (item[2], item[0], item[1]))
     return candidates
@@ -65,7 +89,7 @@ def apply_replay(
             "destination has NaN",
         )
 
-    candidates = _source_candidates(request, params)
+    candidates = _source_candidates(request, params, settings)
     if not candidates:
         return base.rejected_result(
             request,
@@ -84,16 +108,7 @@ def apply_replay(
     source_labels = history.run_labels[run_index][start : start + length]
     source_last = history.run_times[run_index][start + length - 1]
 
-    final, changed, saturated = base.finalize_candidate(clean, source_values, settings)
     age = _age_hours(request.window.first_observation_time, source_first)
-    if not changed.any():
-        return base.rejected_result(
-            request,
-            AttackFamily.REPLAY,
-            AttackRejectionReason.ZERO_EFFECT,
-            "replayed values equal the destination at every position",
-        )
-
     source = ReplaySource(
         first_time=source_first,
         last_time=source_last,
@@ -101,13 +116,24 @@ def apply_replay(
         row_labels=tuple(source_labels),
         candidate_count=len(candidates),
     )
-    return base.build_result(
+
+    # Primary plus any selected secondary variable: replay the same source block, time-aligned.
+    column_candidates: list[tuple[str, np.ndarray, np.ndarray]] = [
+        (params.target_columns[0], clean, source_values)
+    ]
+    for column in params.target_columns[1:]:
+        run = history.run_secondary.get(column)
+        dest_clean = multitarget.secondary_clean_array(request, column)
+        assert run is not None  # all selected channels validated before source selection
+        candidate = np.asarray(run[run_index][start : start + length], dtype="float64")
+        candidate = np.where(np.isfinite(dest_clean), candidate, dest_clean)
+        column_candidates.append((column, dest_clean, candidate))
+
+    return multitarget.build_multi_result(
         request,
         AttackFamily.REPLAY,
-        clean,
-        final,
-        changed,
-        saturated,
+        column_candidates,
+        settings,
         requested_magnitude=0.0,
         sign=0,
         extra={"age_hours": age, "source_candidates": len(candidates)},

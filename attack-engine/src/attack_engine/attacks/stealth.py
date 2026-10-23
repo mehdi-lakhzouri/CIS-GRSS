@@ -7,7 +7,7 @@ attempt; no constraint is relaxed to consume a quota. No anomaly detector is con
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from itertools import pairwise
 
 import numpy as np
@@ -142,7 +142,7 @@ def _rollout(
     return _Attempt(final, None, "", cumulative, max_offset_rate, max_step_rate, max_residual)
 
 
-def apply_stealth(
+def _apply_primary_stealth(
     request: AttackRequest,
     params: StealthParameters,
     rng: np.random.Generator,
@@ -244,7 +244,7 @@ def apply_stealth(
             max_context_residual=attempt.max_context_residual,
             mean_abs_impact=impact,
         )
-        return base.build_result(
+        result = base.build_result(
             request,
             AttackFamily.STEALTH,
             clean,
@@ -255,4 +255,81 @@ def apply_stealth(
             sign=sign,
             extra=extra,
         )
+        return result
     return reject(last_reason, f"{detail}; exhausted {params.max_candidate_attempts} attempts")
+
+
+def apply_stealth(
+    request: AttackRequest,
+    params: StealthParameters,
+    rng: np.random.Generator,
+    settings: AttackSettings,
+) -> AttackResult:
+    """Select channels from the existing contextual strategy, with atomic feasibility.
+
+    Secondary-only attacks use the same latent train-calibrated 5 cm perturbation to drive
+    depth/rainfall, but never commit that unselected reference channel.
+    """
+    from attack_engine.attacks import multitarget
+    from attack_engine.attacks.multistealth import coordinate_secondary
+
+    targets = params.target_columns
+    latent_clean = (
+        request.clean_values
+        if request.primary_target_column == "SOIL_MOISTURE_5"
+        else request.reference_clean.get("SOIL_MOISTURE_5")
+    )
+    if latent_clean is None:
+        return base.rejected_result(
+            request,
+            AttackFamily.STEALTH,
+            AttackRejectionReason.MISSING_CONTEXT,
+            "secondary-only stealth requires the clean 5 cm contextual reference",
+        )
+    latent = replace(request, clean_values=latent_clean, target_columns=("SOIL_MOISTURE_5",))
+    primary = _apply_primary_stealth(
+        latent, params, rng, multitarget.settings_for("SOIL_MOISTURE_5", settings)
+    )
+    if targets == ("SOIL_MOISTURE_5",):
+        return multitarget.validate_result(request, primary, settings)
+    if not primary.applied:
+        return base.rejected_result(
+            request,
+            AttackFamily.STEALTH,
+            primary.rejection_reason,
+            primary.detail,
+            extra=primary.diagnostics.extra,
+        )
+    if request.multistealth_context is None or any(
+        column not in request.multistealth_context.secondary_clean
+        for column in params.secondary_columns
+    ):
+        return base.rejected_result(
+            request,
+            AttackFamily.STEALTH,
+            AttackRejectionReason.MISSING_CONTEXT,
+            "no secondary calibration supplied",
+        )
+    offset5 = np.asarray(primary.candidate_values) - latent_clean
+    secondary = coordinate_secondary(request, params, offset5, settings)
+    candidates = {"SOIL_MOISTURE_5": np.asarray(primary.candidate_values)}
+    candidates.update({column.column: np.asarray(column.candidate_values) for column in secondary})
+    arrays = []
+    for index, column in enumerate(targets):
+        clean = (
+            base.clean_array(request)
+            if index == 0
+            else multitarget.secondary_clean_array(request, column)
+        )
+        if index > 0 and column not in request.extra_clean:
+            clean = np.asarray(request.multistealth_context.secondary_clean[column], dtype=float)
+        arrays.append((column, clean, candidates.get(column, clean)))
+    return multitarget.build_multi_result(
+        request,
+        AttackFamily.STEALTH,
+        arrays,
+        settings,
+        requested_magnitude=primary.diagnostics.requested_magnitude,
+        sign=primary.diagnostics.sign,
+        extra=primary.diagnostics.extra,
+    )

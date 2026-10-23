@@ -138,13 +138,17 @@ def build_scheduling_config(
     max_window_length: int = 6,
     max_attempts: int = 500,
     min_history: dict[AttackFamily, int] | None = None,
+    variable_count: dict[AttackFamily, int] | None = None,
     **overrides: object,
 ) -> SchedulingConfig:
     weights = weights or dict.fromkeys(families, 1.0)
     min_history = min_history or {}
+    variable_count = variable_count or {}
     family_parameters = {
         family: FamilyParameters(
-            weight=weights[family], min_history_hours=min_history.get(family, 0)
+            weight=weights[family],
+            min_history_hours=min_history.get(family, 0),
+            variable_count=variable_count.get(family, 1),
         )
         for family in families
     }

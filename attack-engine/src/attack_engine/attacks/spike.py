@@ -1,16 +1,16 @@
-"""Spike injection: abrupt change at 1-3 positions of the window.
+"""Spike injection: abrupt change at 1-3 synchronized positions.
 
-``k`` positions (``k`` drawn in ``[min_points, max_points]`` and capped at the
-window length) are chosen without replacement and shifted by ``sign * magnitude``.
-Values are clipped to the target bounds; a position that lands back on its clean
-value after clipping and quantization is not counted as modified.
+``k`` positions (drawn in ``[min_points, max_points]`` and capped at the window length) are
+chosen once without replacement and shifted. With extra ``target_columns`` the same positions
+and sign are used on every selected variable, each with its own unit-aware magnitude, so the
+spikes are synchronized across variables. Values are clipped to each variable's bounds.
 """
 
 from __future__ import annotations
 
 import numpy as np
 
-from attack_engine.attacks import base
+from attack_engine.attacks import base, multitarget
 from attack_engine.attacks.config import SpikeParameters
 from attack_engine.attacks.models import (
     AttackRejectionReason,
@@ -40,26 +40,27 @@ def apply_spike(
     point_count = min(int(rng.integers(params.min_points, params.max_points + 1)), clean.size)
     positions = np.sort(rng.choice(clean.size, size=point_count, replace=False))
 
-    candidate = clean.copy()
-    candidate[positions] = candidate[positions] + sign * params.magnitude
-    final, changed, saturated = base.finalize_candidate(clean, candidate, settings)
-
-    if not changed.any():
-        return base.rejected_result(
-            request,
-            AttackFamily.SPIKE,
-            AttackRejectionReason.ZERO_EFFECT,
-            "all spiked positions equal their clean value after bounds/quantization",
-            requested_magnitude=params.magnitude,
-            sign=sign,
+    column_candidates: list[tuple[str, np.ndarray, np.ndarray]] = []
+    for column in params.target_columns:
+        column_clean = (
+            clean
+            if column == params.target_columns[0]
+            else (multitarget.secondary_clean_array(request, column))
         )
-    return base.build_result(
+        magnitude = (
+            params.magnitude
+            if column == params.target_columns[0]
+            else (params.secondary_magnitudes[column])
+        )
+        candidate = column_clean.copy()
+        candidate[positions] = candidate[positions] + sign * magnitude
+        column_candidates.append((column, column_clean, candidate))
+
+    return multitarget.build_multi_result(
         request,
         AttackFamily.SPIKE,
-        clean,
-        final,
-        changed,
-        saturated,
+        column_candidates,
+        settings,
         requested_magnitude=params.magnitude,
         sign=sign,
         extra={

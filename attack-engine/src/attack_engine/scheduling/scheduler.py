@@ -18,8 +18,9 @@ adding or reordering families or stations does not shift another stream's draws.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import timedelta
+from typing import Literal
 
 import pandas as pd
 
@@ -58,6 +59,11 @@ class ScheduleResult:
     windows: tuple[AttackWindow, ...]
     rejections: tuple[WindowRejection, ...]
     ledger: BudgetLedger
+    budget_unit: Literal["cells", "rows"] = "cells"
+    max_modified_rows: int | None = None
+    max_modified_cells: int | None = None
+    eligibility_target: str = "SOIL_MOISTURE_5"
+    variable_counts: dict[AttackFamily, int] = field(default_factory=dict)
 
     @property
     def reserved_total(self) -> int:
@@ -119,9 +125,12 @@ class AttackWindowScheduler:
     config: SchedulingConfig
 
     def plan(self, frame: pd.DataFrame) -> ScheduleResult:
-        report = EligibilityEngine(self.schema, self.partitions, self.config.budget_scope).analyze(
-            frame
+        eligibility_schema = self.schema.model_copy(
+            update={"target_column": self.config.eligibility_target}
         )
+        report = EligibilityEngine(
+            eligibility_schema, self.partitions, self.config.budget_scope
+        ).analyze(frame)
         denominators = dict(report.finite_by_cell)
         family_quotas, allocations = self._allocate(denominators)
 
@@ -153,6 +162,14 @@ class AttackWindowScheduler:
             windows=tuple(windows),
             rejections=tuple(rejections),
             ledger=ledger,
+            budget_unit=self.config.budget_unit,
+            max_modified_rows=self.config.max_modified_rows,
+            max_modified_cells=self.config.max_modified_cells,
+            eligibility_target=self.config.eligibility_target,
+            variable_counts={
+                family: params.variable_count
+                for family, params in self.config.family_parameters.items()
+            },
         )
 
     # Budget allocation -------------------------------------------------------------
@@ -198,7 +215,10 @@ class AttackWindowScheduler:
         if ledger.allocated(family, cell) == 0:
             return
         min_window, max_window = self.config.window_bounds(family)
-        min_history = self.config.family_parameters[family].min_history_hours
+        family_params = self.config.family_parameters[family]
+        min_history = family_params.min_history_hours
+        # Budget is counted in cells: a window of L positions costs L * variable_count cells.
+        variables = family_params.variable_count if self.config.budget_unit == "cells" else 1
         interval = self.schema.timestamps.interval
         generator = identifiers.derive_generator(
             self.config.global_seed, family.value, cell.station, cell.partition
@@ -207,11 +227,12 @@ class AttackWindowScheduler:
         attempts = 0
         no_fit = 0
         while attempts < self.config.max_attempts:
-            remaining = ledger.remaining(family, cell)
-            if remaining < min_window:
+            # How many window positions the remaining cell budget can still afford.
+            affordable = ledger.remaining(family, cell) // variables
+            if affordable < min_window:
                 break
             attempts += 1
-            length = int(generator.integers(min_window, min(max_window, remaining) + 1))
+            length = int(generator.integers(min_window, min(max_window, affordable) + 1))
             ranges = free.start_ranges(length, min_history)
             if not ranges:
                 no_fit += 1
@@ -220,11 +241,13 @@ class AttackWindowScheduler:
             window = self._build_window(
                 family, cell, segments[segment_index], start, length, interval, len(windows)
             )
-            ledger.reserve(window.window_id, family, cell, length)
+            ledger.reserve(window.window_id, family, cell, length * variables)
             free.reserve(segment_index, gap_index, start, length)
             windows.append(window)
 
-        self._record_unfulfilled(family, cell, ledger, attempts, no_fit, min_window, rejections)
+        self._record_unfulfilled(
+            family, cell, ledger, attempts, no_fit, min_window * variables, rejections
+        )
 
     @staticmethod
     def _draw_start(generator, ranges: list[tuple[int, int, int, int]]) -> tuple[int, int, int]:

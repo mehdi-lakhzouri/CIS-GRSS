@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 from pathlib import Path
+from typing import Literal
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
@@ -41,6 +42,9 @@ class FamilyParameters(BaseModel):
     # Hours of prior observations required in the same segment before a window start.
     # Replay and context-aware stealth need history; spike/bias/drift default to none.
     min_history_hours: int = Field(default=0, ge=0)
+    # Number of selected targets; must match the attack config under either budget policy.
+    # A window of L positions reserves L * variable_count cell units, or L row units.
+    variable_count: int = Field(default=1, ge=1)
 
     @model_validator(mode="after")
     def _check_window_bounds(self) -> FamilyParameters:
@@ -69,6 +73,12 @@ class SchedulingConfig(BaseModel):
     # Overlap of reserved windows for the same station. False for the MVP.
     allow_overlap: bool = False
     insufficient_policy: InsufficientPolicy = InsufficientPolicy.REPORT
+    # Fractional quota denominator remains finite observations of eligibility_target.
+    # The unit declares whether that quota buys rows or individual variable cells.
+    budget_unit: Literal["cells", "rows"] = "cells"
+    max_modified_rows: int | None = Field(default=None, ge=0)
+    max_modified_cells: int | None = Field(default=None, ge=0)
+    eligibility_target: Literal["SOIL_MOISTURE_5", "SOIL_MOISTURE_10", "P_CALC"] = "SOIL_MOISTURE_5"
 
     @model_validator(mode="after")
     def _check_consistency(self) -> SchedulingConfig:

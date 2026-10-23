@@ -1,0 +1,23 @@
+# Separate multi-variable campaign; quotas count every modified variable cell.
+global_seed: 14
+attack_budget: 0.03
+budget_scope:
+- validation
+- test
+enabled_families:
+- bias
+min_window_length: 6
+max_window_length: 72
+max_attempts: 4000
+allow_overlap: false
+insufficient_policy: report
+family_parameters:
+  bias:
+    weight: 1.0
+    min_window: 6
+    max_window: 72
+    min_history_hours: 0
+    variable_count: 3
+budget_unit: cells
+max_modified_rows: 1100
+max_modified_cells: 3108

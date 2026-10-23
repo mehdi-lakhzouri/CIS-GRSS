@@ -1,0 +1,32 @@
+# Unit-aware bounds, precision and temporal limits; whole events reject on infeasibility.
+global_seed: 14
+target_low: 0.0
+target_high: 0.7
+quantum: 0.001
+replay:
+  min_age_hours: 24
+  target_columns:
+  - SOIL_MOISTURE_5
+  - SOIL_MOISTURE_10
+  - P_CALC
+variable_constraints:
+  SOIL_MOISTURE_5:
+    low: 0.0
+    high: 0.7
+    quantum: 0.001
+    max_step_per_hour: 0.2
+  SOIL_MOISTURE_10:
+    low: 0.0
+    high: 0.7
+    quantum: 0.001
+    max_step_per_hour: 0.15
+  P_CALC:
+    low: 0.0
+    high: 200.0
+    quantum: 0.01
+    max_step_per_hour: 20.0
+relationships:
+- left: SOIL_MOISTURE_5
+  right: SOIL_MOISTURE_10
+  lower: -0.4
+  upper: 0.4

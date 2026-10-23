@@ -14,6 +14,15 @@ from attack_engine.attacks.models import AttackRejectionReason
 from attack_engine.scheduling.models import AttackFamily
 from attack_engine.scheduling.scheduler import AttackWindowScheduler
 
+# The five families the baseline campaign executes.
+BASELINE_FAMILIES = (
+    AttackFamily.SPIKE,
+    AttackFamily.BIAS,
+    AttackFamily.DRIFT,
+    AttackFamily.REPLAY,
+    AttackFamily.STEALTH,
+)
+
 
 def test_all_five_families_are_causal_deterministic_and_reconcile(
     stealth_frame,
@@ -30,7 +39,7 @@ def test_all_five_families_are_causal_deterministic_and_reconcile(
     scheduling = make_scheduling_config(
         attack_budget=0.4,
         budget_scope=("validation", "test"),
-        families=tuple(AttackFamily),
+        families=tuple(BASELINE_FAMILIES),
         min_window_length=6,
         max_window_length=12,
         min_history={AttackFamily.STEALTH: 4, AttackFamily.REPLAY: 12},
@@ -62,7 +71,7 @@ def test_all_five_families_are_causal_deterministic_and_reconcile(
     second = executor.execute(frame, second_plan)
     assert first == second
     assert not first.skipped_families
-    assert all(first.per_family[family].applied_windows > 0 for family in AttackFamily)
+    assert all(first.per_family[family].applied_windows > 0 for family in BASELINE_FAMILIES)
     modified = set()
     emissions = {}
     for result in first.results:

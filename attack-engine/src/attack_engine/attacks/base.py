@@ -121,6 +121,7 @@ def build_result(
         changed_mask=tuple(bool(flag) for flag in changed),
         diagnostics=diagnostics,
         replay_source=replay_source,
+        target_columns=request.resolved_target_columns,
     )
 
 
@@ -156,6 +157,7 @@ def rejected_result(
         ),
         rejection_reason=reason,
         detail=detail,
+        target_columns=request.resolved_target_columns,
     )
 
 
