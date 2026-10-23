@@ -1,0 +1,51 @@
+# Equal 20% family quota allocation; shared non-overlapping windows.
+global_seed: 14
+attack_budget: 0.12
+budget_scope:
+- validation
+- test
+enabled_families:
+- spike
+- bias
+- drift
+- replay
+- stealth
+min_window_length: 12
+max_window_length: 72
+max_attempts: 4000
+allow_overlap: false
+insufficient_policy: report
+family_parameters:
+  spike:
+    weight: 0.2
+    min_window: 1
+    max_window: 6
+    min_history_hours: 0
+    variable_count: 3
+  bias:
+    weight: 0.2
+    min_window: 6
+    max_window: 72
+    min_history_hours: 0
+    variable_count: 3
+  drift:
+    weight: 0.2
+    min_window: 24
+    max_window: 72
+    min_history_hours: 0
+    variable_count: 3
+  replay:
+    weight: 0.2
+    min_window: 6
+    max_window: 72
+    min_history_hours: 48
+    variable_count: 3
+  stealth:
+    weight: 0.2
+    min_window: 12
+    max_window: 72
+    min_history_hours: 48
+    variable_count: 3
+budget_unit: cells
+max_modified_rows: 4300
+max_modified_cells: 12433

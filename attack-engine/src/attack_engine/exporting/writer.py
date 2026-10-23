@@ -33,11 +33,13 @@ def reserve_run_directory(output_root: Path, run_id: str) -> tuple[Path, Path]:
     except OSError as exc:
         raise ExportError(f"cannot create output directory {output_root}: {exc}") from exc
     final_dir = output_root / run_id
+    if final_dir.resolve().parent != output_root.resolve():
+        raise ExportError("run directory must stay within the output root")
     if final_dir.exists():
         raise ExportError(f"run directory already exists, refusing to overwrite: {final_dir}")
     temp_dir = output_root / f".tmp-{run_id}-{uuid4().hex[:8]}"
     try:
-        temp_dir.mkdir(parents=True, exist_ok=False)
+        temp_dir.mkdir(mode=0o700, parents=True, exist_ok=False)
     except OSError as exc:
         raise ExportError(f"cannot create temporary run directory {temp_dir}: {exc}") from exc
     return temp_dir, final_dir
@@ -54,6 +56,10 @@ def finalize_run_directory(temp_dir: Path, final_dir: Path) -> None:
 
 
 def discard_run_directory(temp_dir: Path) -> None:
+    # Only remove a private staging directory created directly under the chosen output root.
+    resolved = temp_dir.resolve()
+    if not resolved.name.startswith(".tmp-") or resolved.parent != temp_dir.parent.resolve():
+        raise ExportError(f"refusing cleanup outside the private staging directory: {temp_dir}")
     shutil.rmtree(temp_dir, ignore_errors=True)
 
 
@@ -107,8 +113,8 @@ def run_in_temp_directory(
     temp_dir, final_dir = reserve_run_directory(output_root, run_id)
     try:
         write_all(temp_dir)
+        finalize_run_directory(temp_dir, final_dir)
     except BaseException:
         discard_run_directory(temp_dir)
         raise
-    finalize_run_directory(temp_dir, final_dir)
     return final_dir

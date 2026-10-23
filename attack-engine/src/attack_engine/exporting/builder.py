@@ -1,4 +1,4 @@
-"""Construction of the three exported DataFrames from an already-committed execution.
+"""Build export and audience-specific tables from an already-committed execution.
 
 Nothing here runs or recomputes an attack: it only reads
 :class:`~attack_engine.attacks.executor.ExecutionSummary` results (each already
@@ -14,10 +14,14 @@ import numpy as np
 import pandas as pd
 
 from attack_engine.attacks.executor import ExecutionSummary
-from attack_engine.attacks.models import AttackResult
+from attack_engine.attacks.models import AttackResult, ColumnModification
 from attack_engine.dataset import temporal
 from attack_engine.dataset.schema import DatasetSchema, PartitionPlan
-from attack_engine.exporting.contracts import AUDIT_EXTRA_COLUMNS, GROUND_TRUTH_COLUMNS
+from attack_engine.exporting.contracts import (
+    AUDIT_EXTRA_COLUMNS,
+    GROUND_TRUTH_COLUMNS,
+    VARIABLE_GROUND_TRUTH_COLUMNS,
+)
 from attack_engine.exporting.models import ExportError
 
 
@@ -149,6 +153,35 @@ def build_ground_truth(
     return ground_truth
 
 
+def build_cell_ground_truth(ground_truth: pd.DataFrame, target_column: str) -> pd.DataFrame:
+    """Variable-level ground truth: one row per attacked ``(station, time, variable)`` cell.
+
+    Legacy foundation projection. It projects row-level ground truth onto the per-variable
+    (cell) schema in :data:`VARIABLE_GROUND_TRUTH_COLUMNS`. The current single-target run
+    attacks only ``target_column``, so each attacked row yields exactly one cell; a future
+    multi-variable run would contribute one row per attacked variable of a row. This table is
+    retained for compatibility; the pipeline writes full truth via build_variable_ground_truth.
+    """
+    attacked = ground_truth[ground_truth["is_attacked"].to_numpy()]
+    cells = pd.DataFrame(
+        {
+            "station": attacked["station"].to_numpy(),
+            "time": attacked["time"].to_numpy(),
+            "partition": attacked["partition"].to_numpy(),
+            "column": target_column,
+            "clean_value": attacked["clean_target"].to_numpy(),
+            "attacked_value": attacked["attacked_target"].to_numpy(),
+            "is_attacked": attacked["is_attacked"].to_numpy(),
+            "attack_type": attacked["attack_type"].to_numpy(),
+            "attack_id": attacked["attack_id"].to_numpy(),
+            "is_evaluable": attacked["is_evaluable"].to_numpy(),
+        }
+    )
+    if tuple(cells.columns) != VARIABLE_GROUND_TRUTH_COLUMNS:
+        raise ExportError("cell ground truth columns drifted from the documented contract")
+    return cells.reset_index(drop=True)
+
+
 def build_detector_input(
     frame: pd.DataFrame,
     schema: DatasetSchema,
@@ -177,3 +210,175 @@ def ground_truth_label_mask(
 ) -> np.ndarray:
     """Rows whose ground-truth labels the AI team may access (see HANDOVER.md)."""
     return ground_truth["partition"].isin(label_partitions).to_numpy()
+
+
+def build_attacked_columns(
+    frame: pd.DataFrame,
+    schema: DatasetSchema,
+    summary: ExecutionSummary,
+    target_columns: tuple[str, ...],
+) -> dict[str, AttackedTarget]:
+    """Overlay every selected channel, independently checking exact masks and cell conflicts."""
+    attacked = {
+        name: AttackedTarget(
+            frame[name].astype(float).copy(),
+            pd.Series(False, index=frame.index),
+            pd.Series(pd.NA, index=frame.index, dtype=object),
+            pd.Series(pd.NA, index=frame.index, dtype=object),
+        )
+        for name in target_columns
+    }
+    written: set[tuple[int, str]] = set()
+    for result in summary.results:
+        if not result.applied:
+            if result.modified_cells:
+                raise ExportError(f"rejected event {result.window_id} declares modified cells")
+            continue
+        for column in result.columns:
+            if column.column not in attacked:
+                raise ExportError(
+                    f"event {result.window_id} writes unconfigured target {column.column}"
+                )
+            _validate_column(frame, schema, result, column)
+            keys = column.cell_keys()
+            if written.intersection(keys) or len(keys) != len(set(keys)):
+                raise ExportError(
+                    f"cell would be modified by more than one event: {result.window_id}"
+                )
+            written.update(keys)
+            labels = list(column.modified_labels)
+            values = np.asarray(column.candidate_values)[np.asarray(column.changed_mask, bool)]
+            overlay = attacked[column.column]
+            overlay.final_target.loc[labels] = values
+            overlay.is_attacked.loc[labels] = True
+            overlay.attack_type.loc[labels] = result.family.value
+            overlay.attack_id.loc[labels] = result.window_id
+    return attacked
+
+
+def _validate_column(frame, schema, result: AttackResult, column: ColumnModification) -> None:
+    labels = list(column.row_labels)
+    if (
+        len(set(labels)) != len(labels)
+        or not frame.index.is_unique
+        or np.any(frame.index.get_indexer(labels) < 0)
+    ):
+        raise ExportError(f"invalid row labels in {result.window_id}")
+    clean = np.asarray(column.clean_values, dtype=float)
+    final = np.asarray(column.candidate_values, dtype=float)
+    mask = np.asarray(column.changed_mask, bool)
+    if len(clean) != len(labels) or final.shape != clean.shape or mask.shape != clean.shape:
+        raise ExportError(f"invalid column array shapes in {result.window_id}")
+    if not np.array_equal(
+        clean, frame.loc[labels, column.column].to_numpy(dtype=float), equal_nan=True
+    ):
+        raise ExportError(
+            f"clean values disagree with source in {result.window_id}/{column.column}"
+        )
+    actual = np.isfinite(clean) & np.isfinite(final) & (clean != final)
+    if (
+        not np.array_equal(mask, actual)
+        or not np.array_equal(np.isnan(clean), np.isnan(final))
+        or np.any(np.isfinite(clean) & ~np.isfinite(final))
+    ):
+        raise ExportError(f"exact changed mask or missing values disagree in {result.window_id}")
+    if set(frame.loc[labels, schema.station_column]) != {result.station}:
+        raise ExportError(f"event station disagrees with source in {result.window_id}")
+
+
+def build_variable_ground_truth(
+    frame: pd.DataFrame,
+    schema: DatasetSchema,
+    attacked: dict[str, AttackedTarget],
+    partition_labels: pd.Series,
+) -> pd.DataFrame:
+    """Full cell truth: one row per source observation and selected target, including negatives."""
+    tables = []
+    for name, overlay in attacked.items():
+        table = build_ground_truth(
+            frame,
+            schema.model_copy(update={"target_column": name}),
+            overlay,
+            partition_labels,
+        ).rename(columns={"clean_target": "clean_value", "attacked_target": "attacked_value"})
+        table.insert(3, "column", name)
+        table["is_evaluable"] = np.isfinite(table["clean_value"])
+        tables.append(table.loc[:, VARIABLE_GROUND_TRUTH_COLUMNS])
+    return pd.concat(tables, ignore_index=True)
+
+
+def build_multivariable_ground_truth(
+    frame: pd.DataFrame,
+    schema: DatasetSchema,
+    attacked: dict[str, AttackedTarget],
+    partition_labels: pd.Series,
+) -> pd.DataFrame:
+    """Row union, retaining primary compatibility fields and aligned values for every target."""
+    names = tuple(attacked)
+    primary = names[0]
+    truth = build_ground_truth(
+        frame,
+        schema.model_copy(update={"target_column": primary}),
+        attacked[primary],
+        partition_labels,
+    )
+    clean = frame.loc[:, names].to_numpy(dtype=float)
+    final = np.column_stack([overlay.final_target.to_numpy() for overlay in attacked.values()])
+    changed = np.isfinite(clean) & np.isfinite(final) & (clean != final)
+    finite = np.isfinite(clean)
+    ids, families = [set() for _ in range(len(frame))], [set() for _ in range(len(frame))]
+    for overlay in attacked.values():
+        for pos in np.flatnonzero(overlay.is_attacked.to_numpy()):
+            ids[pos].add(str(overlay.attack_id.iloc[pos]))
+            families[pos].add(str(overlay.attack_type.iloc[pos]))
+    truth["is_attacked"] = changed.any(axis=1)
+    truth["is_evaluable"] = finite.any(axis=1)
+    truth["attack_id"] = [next(iter(values)) if len(values) == 1 else None for values in ids]
+    truth["attack_type"] = [
+        next(iter(values)) if len(values) == 1 else ("multiple" if values else None)
+        for values in families
+    ]
+    truth["clean_values"] = clean.tolist()
+    truth["attacked_values"] = final.tolist()
+    truth["changed_columns"] = [
+        [name for name, flag in zip(names, row, strict=True) if flag] for row in changed
+    ]
+    truth["evaluable_columns"] = [
+        [name for name, flag in zip(names, row, strict=True) if flag] for row in finite
+    ]
+    truth["modified_cells"] = changed.sum(axis=1)
+    truth["attack_types"] = [sorted(values) for values in families]
+    truth["attack_ids"] = [sorted(values) for values in ids]
+    return truth
+
+
+def build_variable_audit_dataset(frame, attacked, ground_truth, partition_labels) -> pd.DataFrame:
+    audit = frame.copy(deep=True)
+    for name, overlay in attacked.items():
+        audit[f"{name}_attacked"] = overlay.final_target
+    for name in ("is_attacked", "attack_type", "attack_id"):
+        audit[name] = ground_truth[name].to_numpy()
+    audit["partition"] = partition_labels
+    return audit.reset_index(drop=True)
+
+
+def build_variable_detector_input(frame, schema, attacked, partition_labels, context_columns):
+    columns = {
+        schema.station_column: frame[schema.station_column].to_numpy(),
+        schema.timestamps.column: frame[schema.timestamps.column].to_numpy(),
+        "partition": partition_labels.to_numpy(),
+        **{name: overlay.final_target.to_numpy() for name, overlay in attacked.items()},
+    }
+    for name in context_columns:
+        columns[name] = (
+            attacked[name].final_target if name in attacked else frame[name]
+        ).to_numpy()
+    return pd.DataFrame(columns)
+
+
+def build_detector_labels(truth: pd.DataFrame, allowed: tuple[str, ...], *, cells=False):
+    keys = ["station", "time", "partition", *(["column"] if cells else [])]
+    columns = [*keys, "is_attacked", "attack_type", "attack_id", "is_evaluable"]
+    if not cells and "changed_columns" in truth:
+        columns += ["changed_columns", "modified_cells", "attack_types", "attack_ids"]
+    return truth.loc[ground_truth_label_mask(truth, allowed), columns].reset_index(drop=True)

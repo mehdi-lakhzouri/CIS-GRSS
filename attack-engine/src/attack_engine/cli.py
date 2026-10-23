@@ -441,7 +441,7 @@ def _run_export(
     except (SchedulingError, ExecutionError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return EXIT_VALIDATION_FAILED
-    except ExportError as exc:
+    except (ExportError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return EXIT_VALIDATION_FAILED
 
@@ -467,6 +467,9 @@ def _format_export(dataset: LoadedDataset, integrity: IntegrityResult, result: E
         f"{result.missing_target_count} missing target)",
         f"Modified: {result.modified_count} observations ({result.manifest_row_count} "
         "manifest events)",
+        f"Cells   : {result.modified_cells}; per variable: {result.per_variable_modifications}",
+        f"Budget  : {result.budget_unit}; quota deficit {result.quota_deficit}",
+        f"Release : {result.detector_release_dir} (share only this directory)",
     ]
     for family, committed in sorted(result.per_family_committed.items()):
         lines.append(f"  {family:8s} committed {committed:>6d}")
@@ -662,6 +665,12 @@ def _execution_document(plan: ScheduleResult, summary: ExecutionSummary) -> dict
         "requested_quota": summary.requested_quota,
         "reserved_before": summary.reserved_before,
         "committed_total": summary.committed_total,
+        "committed_cells": summary.committed_cells,
+        "committed_rows": summary.committed_rows,
+        "budget_unit": summary.budget_unit,
+        "max_modified_rows": plan.max_modified_rows,
+        "max_modified_cells": plan.max_modified_cells,
+        "per_variable_modifications": summary.per_variable_modifications,
         "released_total": summary.released_total,
         "deficit_vs_quota": summary.deficit_vs_quota,
         "max_modifiable_total": summary.max_modifiable_total,
@@ -687,6 +696,9 @@ def _execution_document(plan: ScheduleResult, summary: ExecutionSummary) -> dict
                 "reserved": execution.reserved,
                 "max_modifiable": execution.max_modifiable,
                 "committed": execution.committed,
+                "modified_rows": execution.modified_rows,
+                "modified_cells": execution.modified_cells,
+                "per_variable_modifications": execution.per_variable_modifications,
                 "deficit": execution.deficit,
                 "structural_deficit": execution.structural_deficit,
                 "unfulfilled_quota": execution.unfulfilled_quota,
@@ -717,6 +729,9 @@ def _format_execution(
         f"Budget  : requested {summary.requested_quota}, reserved {summary.reserved_before}, "
         f"committed {summary.committed_total}, released {summary.released_total}, "
         f"deficit vs quota {summary.deficit_vs_quota}",
+        f"Modified: {summary.committed_cells} cells across {summary.committed_rows} rows "
+        f"(budget unit: {summary.budget_unit})",
+        f"Per variable: {summary.per_variable_modifications}",
     ]
     if summary.skipped_families:
         skipped = ", ".join(family.value for family in summary.skipped_families)

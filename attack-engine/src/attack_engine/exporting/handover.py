@@ -1,161 +1,153 @@
-"""Generates ``HANDOVER.md``: the human-readable guide for the AI/evaluation team."""
+"""Evaluator instructions and the separately shareable detector handover."""
 
 from __future__ import annotations
 
 from attack_engine.exporting.models import DatasetContract, RunProvenance
 
 
+def build_detector_handover(contract: DatasetContract) -> str:
+    targets = ", ".join(f"`{c}` ({contract.target_units[c]})" for c in contract.target_columns)
+    features = ", ".join(f"`{c}`" for c in contract.detector_input_columns)
+    authorized = ", ".join(contract.detector_label_partitions) or "none"
+    return f"""# Detector release
+
+Share this directory only. Its parent is the private evaluator bundle.
+
+`detector_input.parquet` contains the observed values for all selected targets:
+{targets}. Every selected channel is replaced by its finalized observation; no
+second clean copy or attack label is included in the input file.
+
+Exact observable columns: {features}.
+
+`row_labels.parquet` and `cell_labels.parquet` contain labels for authorized
+partitions only: {authorized}. They contain no clean or attacked value columns.
+Cell labels include negative and non-evaluable selected cells. A cell is evaluable
+iff its original value is finite; row evaluability means at least one selected
+variable is finite. An attack label is true only for an exact finite change.
+
+Test ground truth is restricted to the evaluator until AI predictions are frozen.
+No test-partition labels, clean references, attack manifest, attack configuration
+or evaluator provenance are included in this release. Do not copy those files
+from the parent directory into a detector-facing pipeline.
+
+Times are interval-end UTC timestamps. Partition membership follows the measured
+hour; `2025-01-01T00:00:00Z` closes 2024 and belongs to validation, not test.
+Missing observations remain missing and are never imputed by this export.
+
+Freeze predictions before requesting evaluator access to test labels. Row
+predictions use `(station, time)` keys; variable predictions additionally use
+`column`. Prediction storage and AI benchmarking are outside this phase.
+
+`data_contract.json` defines the schemas, units and audience policy.
+Verify the files in this directory against its own `SHA256SUMS.txt`.
+"""
+
+
 def build_handover_markdown(
     contract: DatasetContract, provenance: RunProvenance, result_row_count: int
 ) -> str:
-    context_columns = ", ".join(f"`{name}`" for name in contract.detector_context_columns)
-    excluded = "\n".join(
-        f"- `{name}`: {reason}" for name, reason in contract.excluded_from_detector.items()
-    )
-    partitions = "\n".join(
-        f"- `{p.name}`: {p.start.isoformat()} .. {p.end.isoformat()} (measured interval)"
+    targets = ", ".join(f"`{c}` ({contract.target_units[c]})" for c in contract.target_columns)
+    boundaries = "\n".join(
+        f"- {p.name}: {p.start.isoformat()} .. {p.end.isoformat()} (measured interval)"
         for p in provenance.partitions
     )
-    label_partitions = ", ".join(f"`{name}`" for name in contract.detector_label_partitions)
-    per_family = "\n".join(
-        f"| {fam.family} | {fam.planned_windows} | {fam.applied_windows} | "
-        f"{fam.rejected_windows} | {fam.committed} | {fam.deficit} |"
-        for fam in provenance.per_family
+    families = "\n".join(
+        f"| {p.family} | {p.planned_windows} | {p.applied_windows} | {p.rejected_windows} | "
+        f"{p.modified_rows} | {p.modified_cells} | {p.committed} | {p.quota_deficit} |"
+        for p in provenance.per_family
     )
-    files_table = "\n".join(
-        [
-            "| File | Audience | Contents |",
-            "|---|---|---|",
-            "| `uscrn_attacked.parquet` | Internal audit / evaluators only | All original "
-            f"columns untouched, plus `{contract.attacked_target_column}`, `is_attacked`, "
-            "`attack_type`, `attack_id`, `partition`. Not detector input. |",
-            "| `detector_input.parquet` | AI detector team | Observation keys, approved "
-            "temporal metadata, the observed (attacked) target, and an explicit allowlist "
-            "of environmental context columns. No label or privileged column. |",
-            "| `ground_truth.parquet` | Evaluators, and the AI team for authorized "
-            "partitions only | One row per source observation: `clean_target`, "
-            "`attacked_target`, `is_attacked`, `attack_type`, `attack_id`, `is_evaluable`. |",
-            "| `attack_manifest.csv` | Evaluators only | One row per planned attack "
-            "window: status, requested/reserved capacity, actual modified count, "
-            "rejection reason, realized magnitude statistics. |",
-            "| `run_provenance.json` | Evaluators, reproducibility audits | Input/config "
-            "identities and hashes, seed, dependency versions, budget and per-family "
-            "accounting, output file hashes. |",
-            "| `data_contract.json` | Everyone | Machine-readable version of this "
-            "document's schema decisions. |",
-            "| `SHA256SUMS.txt` | Everyone | SHA-256 of every file in this directory, "
-            "including `run_provenance.json` itself. |",
-        ]
+    vector_note = (
+        "`clean_values` and `attacked_values` are aligned with `target_columns` in the contract. "
+        "`changed_columns`, `modified_cells`, `attack_ids` and `attack_types` describe the row "
+        "union. Scalar attack fields describe a single event; use the arrays and cell table "
+        "if several disjoint events affect one row."
+        if contract.schema_version == "2.0"
+        else "The original single-target row schema and primary count semantics are preserved."
     )
-    return f"""# Dataset handover - run `{provenance.run_id}`
+    return f"""# Evaluator handover - run `{provenance.run_id}`
 
-## Purpose
-
-This bundle is the Phase 5 export of an independent False Data Injection attack
-engine (TSYP14, Track 2) built on cleaned USCRN hourly observations. It carries
-injected attacks against `{contract.target_column}` from five families -
-spike, bias, drift, replay and context-aware stealth - produced by the already
-validated Phases 1-4 attack-generation pipeline. Nothing in this directory
-re-runs or re-derives an attack; it only arranges already-committed results.
+This directory is the private evaluator bundle. Release only its `detector/`
+subdirectory to the AI detector team. File separation implements the distribution
+policy; the evaluator must retain filesystem custody of this parent directory.
 
 ## Files and audience
 
-{files_table}
+| File | Audience | Contents |
+|---|---|---|
+| `detector/` | Detector team | Observations, authorized labels and public instructions. |
+| `detector_input.parquet` | Observable copy | Same observations as detector release. |
+| `uscrn_attacked.parquet` | Evaluators | Clean columns, attacked copies and labels. |
+| `ground_truth.parquet` | Evaluators only | Full row truth, including restricted test labels. |
+| `ground_truth_cells.parquet` | Evaluators | All selected cells, negatives and missing. |
+| `attack_manifest.csv` | Evaluators | Events, identities, counts and rejection details. |
+| `run_provenance.json` | Evaluators | Input/config/calibration identity, counts and hashes. |
+| `data_contract.json` | Everyone | Versioned table schemas, target units and audience policy. |
+| `SHA256SUMS.txt` | Evaluators | All artifact hashes, excluding itself. |
 
-## Schema and units
+## Targets and exact ground truth
 
-Observation keys are `(station, time)`; `time` is an interval-end UTC timestamp,
-so the record stamped `2025-01-01T00:00:00Z` closes the last hour of 2024 and
-belongs to the `test` partition. The target, `{contract.target_column}`, is
-volumetric soil water content (m3/m3) at 5 cm depth.
+Selected targets: {targets}.
 
-## Partitions (exactly Phase 1's boundaries)
+Every cell label is derived independently from the finite clean and final values.
+Missing values remain missing, with is_attacked=false and is_evaluable=false.
+Row is_attacked is the union across selected variables. Row evaluability is
+{contract.row_evaluability}. Each changed cell carries the exact family and attack
+ID of its applied manifest event; untouched cells have null attack fields.
 
-{partitions}
+{vector_note}
 
-Train covers 2022-2023, validation covers 2024, test covers 2025.
+Test-partition ground truth remains evaluator-only until predictions are frozen.
+The detector release physically omits test labels and all clean-value columns.
+Only authorized training/validation label files may be shared before freezing.
+There is no automatic release of test labels or prediction-freeze service here.
 
-## Nullable values
+## Partitions
 
-Missing values in the original delivery remain missing everywhere: a row whose
-clean target was `NaN` keeps `clean_target`, `attacked_target` and detector
-`{contract.target_column}` as `NaN`/null, `is_attacked = false`, and
-`is_evaluable = false` (point-level attack detection is meaningless without an
-original value to compare against). Missing contextual measurements are never
-imputed.
+{boundaries}
 
-## Detector feature allowlist
+UTC timestamps close the measured hour: `2025-01-01T00:00:00Z` belongs to validation.
+Train is preserved when excluded from the configured attack scope. For this run,
+train_preserved={provenance.train_preserved}.
 
-`detector_input.parquet` contains exactly: `station`, `time`, `partition`,
-`{contract.target_column}` (the attacked, observed value), and:
-{context_columns}.
+## Accounting
 
-Excluded, with reasons:
-{excluded}
+| Family | Planned | Applied | Rejected | Rows | Cells | Budget committed | Quota deficit |
+|---|---:|---:|---:|---:|---:|---:|---:|
+{families}
 
-Inspect `data_contract.json` for the authoritative, versioned list.
+Source rows: {result_row_count}. Modified rows: {provenance.modified_rows}.
+Modified cells: {provenance.modified_cells}. Budget unit: {provenance.budget_unit}.
+Requested quota: {provenance.requested_quota}; quota deficit: {provenance.unfulfilled_budget}.
+Per-variable counts are recorded in provenance and in the multi-variable manifest.
+`modified_count` in the manifest retains the event primary-channel meaning.
 
-## Label semantics
+## Reproduction and integrity
 
-`is_attacked = 1` only if the final attacked target differs from a *finite*
-original target; a zero-effect attack event or a row with a missing original
-value is never labeled positive. Every positive label carries a non-null
-`attack_id` traceable to exactly one applied event in `attack_manifest.csv`.
-
-## Ground-truth access policy
-
-The AI team may use ground-truth labels for `{label_partitions}` for training
-and model selection. Test-partition labels are restricted to the evaluator
-until predictions are frozen - do not share `ground_truth.parquet` rows for
-`test` with the detector team before that point.
-
-## Joining predictions with ground truth
-
-The expected AI output is `predictions.parquet` keyed by `(station, time)`,
-with columns `anomaly_score` (continuous) and `predicted_anomaly` (boolean or
-0/1), plus optional `model_name`/`model_version` metadata. Join it to
-`ground_truth.parquet` on `(station, time)` to compute detection metrics; this
-phase does not implement that benchmark.
-
-## Data leakage precautions
-
-`detector_input.parquet` never carries `is_attacked`, `attack_type`,
-`attack_id`, a second clean-target column, or `flag_incoherence_verticale`
-(derived from the clean reference). Do not join `uscrn_attacked.parquet` or
-`ground_truth.parquet` into a detector-facing pipeline.
-
-## Reproducibility
+Input SHA-256: `{provenance.input_sha256}`. Seed: {provenance.global_seed}.
 
 ```powershell
 uv run attack-engine export `
-  --input {provenance.input_path} `
+  --input "{provenance.input_path}" `
   --config configs/dataset.yaml `
-  --attack-config configs/scheduling.yaml `
-  --attack-params configs/attacks.yaml `
+  --attack-config "{provenance.scheduling_config_path}" `
+  --attack-params "{provenance.attack_params_path}" `
   --output datasets/generated
 ```
 
-Input SHA-256: `{provenance.input_sha256}`. Global seed: `{provenance.global_seed}`.
-See `run_provenance.json` for the full dependency and configuration identity.
+Use a new run ID or the generated default; an existing run is never overwritten.
+The recorded resolved configuration, calibration, dependencies and checksums permit
+reproduction. Dataset and manifest bytes are deterministic for fixed inputs;
+provenance timestamps and run identities are intentionally run-specific.
 
-## Per-family summary (this run)
+Verify all artifacts against `SHA256SUMS.txt`; verify the shareable directory
+against its separate checksum inventory. Source/config/calibration hashes and
+value/mask/accounting checks are verified before publishing the completed run.
 
-| Family | Planned | Applied | Rejected | Committed | Deficit |
-|---|---:|---:|---:|---:|---:|
-{per_family}
+## Scope and limitations
 
-Total rows: {result_row_count}. Committed modifications: {provenance.committed_modifications}.
-
-## Checksums and integrity
-
-Verify every file against `SHA256SUMS.txt` (standard `sha256sum -c` format).
-The source Parquet's SHA-256 was checked unchanged before and after this
-export; see `run_provenance.json`'s `input_sha256`.
-
-## Known limitations
-
-This bundle documents one export run of an experimental attack generator; it
-makes no claim about detector evasion, detection efficacy or online attack
-success. See the project `README.md` and `PHASE4_REPORT.md` for the
-underlying generation methodology and its limitations.
+This export arranges already-committed FDI results and does not rerun attacks.
+It implements no AI benchmark, ERA5 integration or Sensor Emulator. Physical
+constraints and attack feasibility remain the generator's configured experiment
+policies; no detector-evasion claim is made. Directory separation is a distribution
+boundary, not a role-authentication service: do not share the evaluator parent.
 """

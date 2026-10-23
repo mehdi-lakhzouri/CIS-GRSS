@@ -1,0 +1,105 @@
+# Combined multi-variable campaign: all five existing strategies.
+global_seed: 14
+target_low: 0.0
+target_high: 0.7
+quantum: 0.001
+spike:
+  magnitude: 0.3
+  sign: random
+  min_points: 1
+  max_points: 3
+  target_columns:
+  - SOIL_MOISTURE_5
+  - SOIL_MOISTURE_10
+  - P_CALC
+  secondary_magnitudes:
+    SOIL_MOISTURE_10: 0.2
+    P_CALC: 5.0
+variable_constraints:
+  SOIL_MOISTURE_5:
+    low: 0.0
+    high: 0.7
+    quantum: 0.001
+    max_step_per_hour: 0.4
+  SOIL_MOISTURE_10:
+    low: 0.0
+    high: 0.7
+    quantum: 0.001
+    max_step_per_hour: 0.3
+  P_CALC:
+    low: 0.0
+    high: 200.0
+    quantum: 0.01
+    max_step_per_hour: 20.0
+relationships:
+- left: SOIL_MOISTURE_5
+  right: SOIL_MOISTURE_10
+  lower: -0.4
+  upper: 0.4
+bias:
+  magnitude: 0.05
+  sign: random
+  target_columns:
+  - SOIL_MOISTURE_5
+  - SOIL_MOISTURE_10
+  - P_CALC
+  secondary_magnitudes:
+    SOIL_MOISTURE_10: 0.04
+    P_CALC: 2.0
+drift:
+  final_magnitude: 0.1
+  sign: random
+  max_slope_per_hour: 0.05
+  hold_first: true
+  target_columns:
+  - SOIL_MOISTURE_5
+  - SOIL_MOISTURE_10
+  - P_CALC
+  secondary_magnitudes:
+    SOIL_MOISTURE_10: 0.08
+    P_CALC: 3.0
+  secondary_max_slopes_per_hour:
+    SOIL_MOISTURE_10: 0.04
+    P_CALC: 1.0
+replay:
+  min_age_hours: 24
+  target_columns:
+  - SOIL_MOISTURE_5
+  - SOIL_MOISTURE_10
+  - P_CALC
+stealth:
+  magnitude_min: 0.005
+  magnitude_max: 0.015
+  sign: random
+  residual_tolerance_multiplier: 1.0
+  max_change_rate: 0.003
+  max_step_change: 0.05
+  max_cumulative_drift: 0.08
+  min_attack_impact: 0.002
+  required_context_features:
+  - SOIL_MOISTURE_10
+  - P_CALC
+  - SOIL_TEMP_5
+  - T_HR_AVG
+  min_history_hours: 24
+  calibration_path: ../../../calibrations/uscrn_train.json
+  missing_context_policy: reject_window
+  max_candidate_attempts: 8
+  attack_partitions:
+  - validation
+  - test
+  ridge_alpha: 1.0
+  residual_quantile: 0.99
+  residual_floor: 0.001
+  min_training_rows: 240
+  depth_coupling_max_ratio: 1.0
+  depth_coupling_lag_hours: 1
+  depth_max_step_change: 0.05
+  rainfall_lag_hours: 2
+  rainfall_pulse_mm: 1.0
+  rainfall_trigger: 0.001
+  rainfall_max_mm: 200.0
+  target_columns:
+  - SOIL_MOISTURE_5
+  - SOIL_MOISTURE_10
+  - P_CALC

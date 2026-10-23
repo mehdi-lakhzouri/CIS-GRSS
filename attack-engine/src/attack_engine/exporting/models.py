@@ -53,6 +53,18 @@ class ExportConfiguration(BaseModel):
     def _check_run_id(self) -> ExportConfiguration:
         if self.run_id is not None and not self.run_id.strip():
             raise ValueError("run_id must not be blank")
+        if self.run_id is not None and (
+            self.run_id in {".", ".."} or any(c in self.run_id for c in "/\\:")
+        ):
+            raise ValueError("run_id must be a single directory name")
+        if len(set(self.detector_label_partitions)) != len(self.detector_label_partitions) or set(
+            self.detector_label_partitions
+        ) - {"train", "validation"}:
+            raise ValueError("detector labels may contain only unique train/validation partitions")
+        if self.detector_context_columns is not None and len(
+            set(self.detector_context_columns)
+        ) != len(self.detector_context_columns):
+            raise ValueError("detector_context_columns must be unique")
         return self
 
 
@@ -61,7 +73,7 @@ class DatasetContract(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    schema_version: Literal["1.0"] = EXPORT_SCHEMA_VERSION
+    schema_version: Literal["1.0", "2.0"] = EXPORT_SCHEMA_VERSION
     key_columns: tuple[str, ...]
     target_column: str
     attacked_target_column: str
@@ -75,6 +87,33 @@ class DatasetContract(BaseModel):
     excluded_from_detector: dict[str, str]
     partitions: tuple[str, ...]
     detector_label_partitions: tuple[str, ...]
+    # Multi-target foundation (defaults describe the current single-target run): the target
+    # variables an event may attack, the clean-target -> attacked-column name map, and the
+    # columns of the optional variable-level (cell) ground-truth table.
+    target_columns: tuple[str, ...] = ()
+    attacked_columns: dict[str, str] = Field(default_factory=dict)
+    variable_ground_truth_columns: tuple[str, ...] = ()
+    row_evaluability: str = "finite primary target"
+    cell_ground_truth_coverage: str = (
+        "every source row and selected variable, including negatives and missing values"
+    )
+    detector_release_directory: str = "detector"
+    test_ground_truth_policy: str = (
+        "evaluator only until predictions are frozen; never in detector release"
+    )
+    target_units: dict[str, str] = Field(default_factory=dict)
+    artifact_audiences: dict[str, str] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def _default_multitarget(self) -> DatasetContract:
+        # Keep the contract self-consistent without changing single-target construction sites.
+        if not self.target_columns:
+            object.__setattr__(self, "target_columns", (self.target_column,))
+        if not self.attacked_columns:
+            object.__setattr__(
+                self, "attacked_columns", {self.target_column: self.attacked_target_column}
+            )
+        return self
 
 
 class GroundTruthRecord(BaseModel):
@@ -91,6 +130,39 @@ class GroundTruthRecord(BaseModel):
     attack_type: str | None
     attack_id: str | None
     is_evaluable: bool
+
+
+class GroundTruthCellRecord(BaseModel):
+    """One (station, time, variable) cell of the variable-level ground truth.
+
+    The exporter writes every selected cell, including negatives and missing values.
+    The legacy foundation projection helper remains available for changed-only views.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    station: str
+    time: AwareDatetime
+    partition: str | None
+    column: str
+    clean_value: float | None
+    attacked_value: float | None
+    is_attacked: bool
+    attack_type: str | None
+    attack_id: str | None
+    is_evaluable: bool
+
+
+class MultiVariableGroundTruthRecord(GroundTruthRecord):
+    """Row union with aligned per-target values and exact changed-variable membership."""
+
+    clean_values: list[float | None]
+    attacked_values: list[float | None]
+    changed_columns: list[str]
+    evaluable_columns: list[str]
+    modified_cells: int = Field(ge=0)
+    attack_types: list[str]
+    attack_ids: list[str]
 
 
 class AttackManifestRecord(BaseModel):
@@ -139,6 +211,10 @@ class FamilyProvenance(BaseModel):
     reserved: int
     committed: int
     deficit: int
+    quota_deficit: int = 0
+    modified_rows: int = 0
+    modified_cells: int = 0
+    per_variable_modifications: dict[str, int] = Field(default_factory=dict)
 
 
 class RunProvenance(BaseModel):
@@ -146,7 +222,7 @@ class RunProvenance(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    export_schema_version: Literal["1.0"] = EXPORT_SCHEMA_VERSION
+    export_schema_version: Literal["1.0", "2.0"] = EXPORT_SCHEMA_VERSION
     run_id: str
     generated_at: AwareDatetime
 
@@ -179,6 +255,19 @@ class RunProvenance(BaseModel):
     unfulfilled_budget: int
 
     per_family: tuple[FamilyProvenance, ...]
+    target_columns: tuple[str, ...] = ()
+    budget_unit: str = "cells"
+    max_modified_rows: int | None = None
+    max_modified_cells: int | None = None
+    modified_rows: int = 0
+    modified_cells: int = 0
+    per_variable_modifications: dict[str, int] = Field(default_factory=dict)
+    per_partition_modifications: dict[str, dict[str, int]] = Field(default_factory=dict)
+    train_preserved: bool = False
+    resolved_attack_configuration: dict = Field(default_factory=dict)
+    secondary_calibration: dict | None = None
+    secondary_calibration_sha256: str | None = None
+    engine_source_sha256: dict[str, str] = Field(default_factory=dict)
 
     # File name (relative to the run directory) -> SHA-256. Excludes this file
     # itself and SHA256SUMS.txt, which is written last and covers both.
@@ -215,3 +304,13 @@ class ExportResult(BaseModel):
     validation_passed: bool
     validation_messages: tuple[str, ...]
     generated_at: datetime
+    modified_rows: int = 0
+    modified_cells: int = 0
+    per_variable_modifications: dict[str, int] = Field(default_factory=dict)
+    target_columns: tuple[str, ...] = ()
+    cell_ground_truth_row_count: int = 0
+    detector_release_dir: Path | None = None
+    budget_unit: str = "cells"
+    quota_deficit: int = 0
+    evaluable_row_count: int = 0
+    evaluable_cell_count: int = 0

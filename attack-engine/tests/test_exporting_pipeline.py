@@ -41,6 +41,8 @@ EXPECTED_FILES = (
     "uscrn_attacked.parquet",
     "detector_input.parquet",
     "ground_truth.parquet",
+    "ground_truth_cells.parquet",
+    "detector",
     "attack_manifest.csv",
     "run_provenance.json",
     "data_contract.json",

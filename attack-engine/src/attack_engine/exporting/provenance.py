@@ -9,6 +9,8 @@ checksums file that covers it instead).
 
 from __future__ import annotations
 
+import hashlib
+import json
 import sys
 from datetime import UTC, datetime
 from importlib import metadata as importlib_metadata
@@ -49,6 +51,9 @@ def build_run_provenance(
     validation_passed: bool,
     validation_messages: tuple[str, ...],
     output_files: dict[str, str],
+    target_columns: tuple[str, ...] = (),
+    partition_statistics: dict | None = None,
+    schema_version: str = "1.0",
 ) -> RunProvenance:
     calibration_path = attack_config.stealth.calibration_path if attack_config.stealth else None
     per_family = tuple(
@@ -61,10 +66,15 @@ def build_run_provenance(
             reserved=execution.reserved,
             committed=execution.committed,
             deficit=execution.deficit,
+            quota_deficit=execution.unfulfilled_quota,
+            modified_rows=execution.modified_rows,
+            modified_cells=execution.modified_cells,
+            per_variable_modifications=execution.per_variable_modifications,
         )
         for family, execution in summary.per_family.items()
     )
     return RunProvenance(
+        export_schema_version=schema_version,
         run_id=run_id,
         generated_at=datetime.now(UTC),
         input_path=dataset.metadata.path,
@@ -92,6 +102,33 @@ def build_run_provenance(
         committed_modifications=summary.committed_total,
         unfulfilled_budget=plan.ledger.total_allocated - summary.committed_total,
         per_family=per_family,
+        target_columns=target_columns,
+        budget_unit=summary.budget_unit,
+        max_modified_rows=plan.max_modified_rows,
+        max_modified_cells=plan.max_modified_cells,
+        modified_rows=summary.committed_rows,
+        modified_cells=summary.committed_cells,
+        per_variable_modifications={
+            c: summary.per_variable_modifications.get(c, 0) for c in target_columns
+        },
+        per_partition_modifications=partition_statistics or {},
+        train_preserved=not (partition_statistics or {}).get("train", {}).get("modified_cells", 0),
+        resolved_attack_configuration=attack_config.model_dump(mode="json"),
+        secondary_calibration=summary.secondary_calibration,
+        secondary_calibration_sha256=hashlib.sha256(
+            json.dumps(
+                summary.secondary_calibration,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode()
+        ).hexdigest()
+        if summary.secondary_calibration is not None
+        else None,
+        engine_source_sha256={
+            path.relative_to(Path(__file__).parents[1]).as_posix(): sha256_file(path)
+            for path in sorted(Path(__file__).parents[1].rglob("*.py"))
+        },
         output_files=output_files,
         validation_passed=validation_passed,
         validation_messages=validation_messages,

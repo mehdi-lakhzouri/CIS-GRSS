@@ -52,6 +52,18 @@ MANIFEST_COLUMNS: tuple[str, ...] = (
     "replay_source_last_time",
     "replay_source_age_hours",
 )
+MULTI_MANIFEST_COLUMNS = (
+    *MANIFEST_COLUMNS,
+    "target_columns",
+    "changed_variables",
+    "modified_rows",
+    "modified_cells",
+    "per_variable_modifications",
+    "budget_unit",
+    "reserved_budget",
+    "committed_budget",
+    "reserved_cells",
+)
 
 GROUND_TRUTH_COLUMNS: tuple[str, ...] = (
     "station",
@@ -64,14 +76,41 @@ GROUND_TRUTH_COLUMNS: tuple[str, ...] = (
     "attack_id",
     "is_evaluable",
 )
+MULTI_GROUND_TRUTH_COLUMNS = (
+    *GROUND_TRUTH_COLUMNS,
+    "clean_values",
+    "attacked_values",
+    "changed_columns",
+    "evaluable_columns",
+    "modified_cells",
+    "attack_types",
+    "attack_ids",
+)
+
+# Full variable-level truth schema; the legacy changed-only projection remains available.
+VARIABLE_GROUND_TRUTH_COLUMNS: tuple[str, ...] = (
+    "station",
+    "time",
+    "partition",
+    "column",
+    "clean_value",
+    "attacked_value",
+    "is_attacked",
+    "attack_type",
+    "attack_id",
+    "is_evaluable",
+)
 
 
-def default_detector_context_columns(schema: DatasetSchema) -> tuple[str, ...]:
+def default_detector_context_columns(
+    schema: DatasetSchema,
+    target_columns: tuple[str, ...] | None = None,
+) -> tuple[str, ...]:
     """The project default allowlist: every schema column except keys, the target
     itself, the year column (superseded by ``partition``) and privileged columns.
     """
     excluded = {
-        schema.target_column,
+        *(target_columns or (schema.target_column,)),
         schema.station_column,
         schema.timestamps.column,
         schema.timestamps.year_column,
@@ -81,14 +120,16 @@ def default_detector_context_columns(schema: DatasetSchema) -> tuple[str, ...]:
 
 
 def resolve_detector_context_columns(
-    schema: DatasetSchema, config: ExportConfiguration
+    schema: DatasetSchema,
+    config: ExportConfiguration,
+    target_columns: tuple[str, ...] | None = None,
 ) -> tuple[str, ...]:
     """Resolve the configured or default allowlist, rejecting privileged columns."""
     if config.detector_context_columns is None:
-        return default_detector_context_columns(schema)
+        return default_detector_context_columns(schema, target_columns)
     requested = config.detector_context_columns
     forbidden = (set(requested) & set(PRIVILEGED_COLUMNS)) | (
-        {schema.target_column} & set(requested)
+        set(target_columns or (schema.target_column,)) & set(requested)
     )
     if forbidden:
         raise ValueError(
@@ -106,25 +147,46 @@ def build_dataset_contract(
     partitions: PartitionPlan,
     config: ExportConfiguration,
     context_columns: tuple[str, ...],
+    target_columns: tuple[str, ...] | None = None,
 ) -> DatasetContract:
+    targets = target_columns or (schema.target_column,)
+    multi = targets != (schema.target_column,)
     detector_input_columns = (
         schema.station_column,
         schema.timestamps.column,
         "partition",
-        schema.target_column,
+        *targets,
         *context_columns,
     )
+    target = targets[0]
+    attacked_target = f"{target}_attacked"
     return DatasetContract(
+        schema_version="2.0" if multi else "1.0",
         key_columns=(schema.station_column, schema.timestamps.column),
-        target_column=schema.target_column,
-        attacked_target_column=f"{schema.target_column}_attacked",
+        target_column=target,
+        attacked_target_column=attacked_target,
         source_columns=schema.column_names,
-        audit_extra_columns=AUDIT_EXTRA_COLUMNS,
+        audit_extra_columns=tuple(f"{c}_attacked" for c in targets) + AUDIT_EXTRA_COLUMNS[1:],
         detector_input_columns=detector_input_columns,
         detector_context_columns=context_columns,
-        ground_truth_columns=GROUND_TRUTH_COLUMNS,
-        manifest_columns=MANIFEST_COLUMNS,
+        ground_truth_columns=MULTI_GROUND_TRUTH_COLUMNS if multi else GROUND_TRUTH_COLUMNS,
+        manifest_columns=MULTI_MANIFEST_COLUMNS if multi else MANIFEST_COLUMNS,
         excluded_from_detector=dict(PRIVILEGED_COLUMNS),
         partitions=tuple(partition.name for partition in partitions.partitions),
         detector_label_partitions=config.detector_label_partitions,
+        target_columns=targets,
+        attacked_columns={c: f"{c}_attacked" for c in targets},
+        variable_ground_truth_columns=VARIABLE_GROUND_TRUTH_COLUMNS,
+        row_evaluability="at least one finite selected target"
+        if multi
+        else "finite primary target",
+        target_units={c: schema.column(c).unit or "unspecified" for c in targets},
+        artifact_audiences={
+            "ground_truth.parquet": "evaluator only; test truth held until predictions frozen",
+            "ground_truth_cells.parquet": "evaluator only; hold test labels until freeze",
+            "uscrn_attacked.parquet": "evaluator only; contains clean references",
+            "attack_manifest.csv": "evaluator only; contains attack timing and identity",
+            "run_provenance.json": "evaluator only; contains attack configuration and statistics",
+            "detector/": "shareable: observable inputs and authorized train/validation labels only",
+        },
     )
