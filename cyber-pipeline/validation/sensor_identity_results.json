@@ -1,0 +1,199 @@
+{
+  "validated_at": "2026-10-23T19:09:10.418781+00:00",
+  "release": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\combined\\detector",
+  "input_sha256_before": {
+    "detector_input.parquet": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+    "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd"
+  },
+  "input_sha256_after": {
+    "detector_input.parquet": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+    "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd"
+  },
+  "source_preserved": true,
+  "private_storage": "C:\\Users\\medma\\Documents\\github\\cis\\cyber-pipeline\\.sensorlab\\identity-20261023T190838Z-6618b4e0",
+  "private_password_persisted": false,
+  "private_key_storage": "Encrypted PKCS#8; restricted ACL/mode; Git-ignored",
+  "registry": {
+    "registry_version": "1.0",
+    "algorithm": "Ed25519",
+    "sensors": [
+      {
+        "sensor_id": "uscrn-az-tucson-11-w",
+        "station": "AZ_Tucson_11_W",
+        "key_id": "ed25519-88c8b961fed79fc9ba7c5124cc859aa264943cd5aed89c608dbf63daa52d6814",
+        "public_key": "jk279VGJBVHXRDCJFGWsh5DB3932DpP7MVcGLQxpuQ4=",
+        "status": "active"
+      },
+      {
+        "sensor_id": "uscrn-ca-fallbrook-5-ne",
+        "station": "CA_Fallbrook_5_NE",
+        "key_id": "ed25519-0adda8c99382046a18bb52435e21f208801158a2ff6beb0fe0251c63e42c694a",
+        "public_key": "NYnAI47EvYkkA1puDQcT18/5XhYdsoBxXI0XEOKikcI=",
+        "status": "active"
+      },
+      {
+        "sensor_id": "uscrn-ms-newton-5-ene",
+        "station": "MS_Newton_5_ENE",
+        "key_id": "ed25519-44e8579a551d7bbdaa8e0f331289f6b28b65bc81e9d75fe764dce30c8478f07c",
+        "public_key": "bvxWc877wbVL2qrGOa4LJ9QTq2wHwcvj4uWxJ7SP1H8=",
+        "status": "active"
+      },
+      {
+        "sensor_id": "uscrn-ny-ithaca-13-e",
+        "station": "NY_Ithaca_13_E",
+        "key_id": "ed25519-39d3a374c83f1c37e28934ed96f681f23584e42cdd355637a45f456040e38df7",
+        "public_key": "PePIWxiNCPgcg9b+yqFvuRuOFsd+Hqg//19ZFLkRmh8=",
+        "status": "active"
+      },
+      {
+        "sensor_id": "uscrn-ok-goodwell-2-e",
+        "station": "OK_Goodwell_2_E",
+        "key_id": "ed25519-1702e9cb55cd9d911b6ad6e24c94f8870d23c2f90de6af7a5e40a5f1ab48bcca",
+        "public_key": "IjDqiGQETVl8YkE49LBabqq2tmGJM+YNo2SRNLWz3p4=",
+        "status": "active"
+      },
+      {
+        "sensor_id": "uscrn-ok-goodwell-2-se",
+        "station": "OK_Goodwell_2_SE",
+        "key_id": "ed25519-6845eac8004d0d4d590be790922f503dad6bbcd01cbb85041fcbdba0ec194fec",
+        "public_key": "JzzCNzhSS0Ag6NsafoGWhnrgGmguNhz4en5YxsbaNCs=",
+        "status": "active"
+      }
+    ]
+  },
+  "selection": {
+    "start_inclusive": "2025-01-01T01:00:00Z",
+    "end_exclusive": "2025-01-02T01:00:00Z"
+  },
+  "replay": {
+    "state": "completed",
+    "session_id": "3daeb611-8506-453c-b57b-5077fa65a803",
+    "speed": 3600.0,
+    "transmitted": 144,
+    "error": null,
+    "sensors": [
+      {
+        "sensor_id": "uscrn-az-tucson-11-w",
+        "station": "AZ_Tucson_11_W",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ca-fallbrook-5-ne",
+        "station": "CA_Fallbrook_5_NE",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ms-newton-5-ene",
+        "station": "MS_Newton_5_ENE",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ny-ithaca-13-e",
+        "station": "NY_Ithaca_13_E",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ok-goodwell-2-e",
+        "station": "OK_Goodwell_2_E",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ok-goodwell-2-se",
+        "station": "OK_Goodwell_2_SE",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      }
+    ]
+  },
+  "speed": 3600,
+  "elapsed_seconds_including_cli_startup": 24.984,
+  "sent_at_span_seconds": 22.999879,
+  "verified_messages": 144,
+  "null_measurements": 288,
+  "verification_without_password_or_private_directory_in_cwd": true,
+  "measurement_tampering_rejected": true,
+  "tamper_verification_exit_code": 1,
+  "tamper_error": "Verification failed at line 1: invalid Ed25519 signature",
+  "revoked_key_rejected": true,
+  "revoked_key_error": "Verification failed at line 1: sensor key is revoked",
+  "private_dataset_files_opened": [],
+  "artifacts_sha256": {
+    "revoked_registry.json": "5f2818e33fb98ec648e4203329bad5b3d3ca83515d6c77f8c1545486eb871d08",
+    "signed-24h.jsonl": "b7b74ca33f4c1b2041215632efbffa2941503ea6ac0ee5b0424d201332932cdb",
+    "tampered-measurement.jsonl": "e6c0736d811ab5bad98de79a621218f90eccad28b1bd7beac0cc542a81fed6c0",
+    "trusted_registry.json": "28abf4ae6f9b2c83fc98b31787f44cdaff43c40aab7b89519f4a65750a67a5b8",
+    "verification-vector.json": "2c0b5d68b0f53d135d867ffc5f615d456567d95f69f41b6854d973353e75a950"
+  },
+  "output_directory": "C:\\Users\\medma\\Documents\\github\\cis\\cyber-pipeline\\outputs\\identity-20261023T190838Z-6618b4e0",
+  "implementation_sha256": {
+    "pyproject.toml": "7f38f7a71622a078fcc14baded5dfaeb9d2b04c5d0566b93f737efa234fd048c",
+    "uv.lock": "3827948a4c14dadb22fb8a373b5d31f50e007198182cf3d7f4dc982ecb171a5b",
+    "src/sensorlab/__init__.py": "1f8cc6e13d28c81a5c79567b2e4207e67a9cff0322c91164cc735093e0b8f082",
+    "src/sensorlab/cli.py": "f587ebdcfdc7b8e67b577e5498fd109cdda03f333661572871da84032f1ebc1b",
+    "src/sensorlab/clock.py": "3a4885cba247e8e1ab0250824297fb675b381e7aad8f56bde111c169fe8c6332",
+    "src/sensorlab/dataset.py": "5672cad4075bcf2ded1b2cec44aeaea37ce672927f9bf5e4d7ea55cc422bf463",
+    "src/sensorlab/identity.py": "0d478be95ff0987dec5b21938fcdec9ce08798b2bd35922059f139adb2a6a8bd",
+    "src/sensorlab/identity_cli.py": "1249789e5a08187702a35bab1fa39e2ee03bc22674769621bb9a09c626e6c0fa",
+    "src/sensorlab/playback.py": "01fb925b5258b3534fc853588eb8c0d49f1dd1c5f1fbea96e726896015844c21",
+    "src/sensorlab/registry.py": "7cf0c55c95970f1c7dec04cb5cbe76b43076bb2581430db15092d3976e2bc073",
+    "src/sensorlab/sensor.py": "e9d3f82e0a72045642746eb61cfd9678c43603caa970f9ec3adb1a5528663204",
+    "src/sensorlab/signing.py": "ab6a24c1fa3b9edf98b0aa02294df71f84cec9a7f2d1817d651408003cf6e61e",
+    "src/sensorlab/telemetry.py": "783294fa75d74caabd548485b42858353169255a1fd3fa6b3766936ddb0210fc",
+    "src/sensorlab/terminal.py": "d595e0faefee9aa55f734b02ce6422c74fb3ebe3414f5aab212dc26afd3ad35c",
+    "src/sensorlab/transport.py": "63ff39d2a0b40d9853f4bb33fbefaebc80b80d51d04f9316a40e3d44893e6414",
+    "src/sensorlab/wire.py": "9ae9e0575fb50acfcd22ece341b6cf6f8a81b498f01b0ae3082c7ea1cd3bb612",
+    "schemas/sensor-registry-v1.schema.json": "33e17b44469adbab8fe07476495b94aad819566f793dd4a540690c58dabc83a9",
+    "schemas/signed-telemetry-v1.schema.json": "1d5880ce644d96be8d0ebfb29512184b7cafbd327b60c41df7509853c499dabb",
+    "schemas/telemetry-v1.schema.json": "bb283e98d191a10ca4863deafa3b1f1e7f1300de4fbde471e9cc76d0e0c7caec",
+    "tests/conftest.py": "a04bd5d137e0871b70747ad4470d3584645a7ba31f77c5c89769a4961b8303a0",
+    "tests/test_cli.py": "ea6bc6739e79695adc308aba84952f415150b890be52f2493790e8862e8520d2",
+    "tests/test_dataset.py": "91ba158592d64912beaebac5a6c619e9ffb86035be138c0a17f0d8b9ef5296c0",
+    "tests/test_identity.py": "ad0c95d3e1e79d14384a9f203dd81ff54252bb6267a965d82aa41e99f7868fb5",
+    "tests/test_identity_cli.py": "1647462e2649cdca4a0a063ecae8f4cd8da1ecf452de061e8e03487ac30bb7cc",
+    "tests/test_playback.py": "3de61777191fd9a737711ef8a2fcd1b8f4decb395792eaa8fa9a18e62d7d9d6e",
+    "tests/test_real_dataset.py": "36d2ae540d5d9c1af2c3f2c0a1a255db75de74c4da3205d751d500db1b6d945e",
+    "tests/test_signing.py": "6e4e29ae9674d54d7248d55134ec0391d15ea2539a1b662242bedcb2cf66382a",
+    "scripts/validate_real_replay.py": "4e1e1682e2af874bfbd4f3104b685ec61f98f0186d4ef9eb04af34f7c654d022",
+    "scripts/validate_sensor_identity.py": "009f85127c635ec67f0426309449ef4957fa8e0b824878b3985f6ea0fedf7bb2"
+  },
+  "verification": {
+    "pytest": {
+      "passed": 130,
+      "skipped": 0,
+      "real_data_cases": 3,
+      "elapsed_seconds": 13.5
+    },
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "uv_lock_check": "passed",
+    "uv_build": "source distribution and wheel built successfully",
+    "private_keys_git_ignored": 6,
+    "private_keys_in_publishable_files": 0,
+    "private_keys_in_build_artifacts": 0,
+    "attack_engine_diff": "empty",
+    "schemas_match_runtime_models": true
+  }
+}

@@ -1,0 +1,5 @@
+outputs/
+.pytest-tmp*/
+dist/
+.sensorlab/
+*.private.pem

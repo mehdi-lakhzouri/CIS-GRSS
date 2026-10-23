@@ -1,0 +1,42 @@
+{
+  "description": "Public verification vector; no private seed/key.",
+  "public_key": "jk279VGJBVHXRDCJFGWsh5DB3932DpP7MVcGLQxpuQ4=",
+  "signing_bytes_base64": "U0VOU09STEFCLVNJR05FRC1URUxFTUVUUlkAdjEAeyJhbGdvcml0aG0iOiJFZDI1NTE5IiwiZW52ZWxvcGVfdmVyc2lvbiI6IjEuMCIsImtleV9pZCI6ImVkMjU1MTktODhjOGI5NjFmZWQ3OWZjOWJhN2M1MTI0Y2M4NTlhYTI2NDk0M2NkNWFlZDg5YzYwOGRiZjYzZGFhNTJkNjgxNCIsInNlcmlhbGl6YXRpb24iOiJzZW5zb3JsYWItYzE0bi0xIiwidGVsZW1ldHJ5Ijp7Im1lYXN1cmVtZW50cyI6eyJMQVRJVFVERSI6IjB4MS4wMWViODUxZWI4NTFmcCs1IiwiTE9OR0lUVURFIjoiLTB4MS5iY2FlMTQ3YWUxNDdicCs2IiwiUF9DQUxDIjoiMHgwLjBwKzAiLCJSSF9IUl9BVkciOiIweDEuMDAwMDAwMDAwMDAwMHArNCIsIlNPSUxfTU9JU1RVUkVfMTAiOiIweDEuODEwNjI0ZGQyZjFhYXAtNSIsIlNPSUxfTU9JU1RVUkVfMTAwIjpudWxsLCJTT0lMX01PSVNUVVJFXzIwIjpudWxsLCJTT0lMX01PSVNUVVJFXzUiOiIweDEuZGIyMmQwZTU2MDQxOXAtNiIsIlNPSUxfTU9JU1RVUkVfNTAiOm51bGwsIlNPSUxfVEVNUF8xMCI6IjB4MS4zMTk5OTk5OTk5OTlhcCs0IiwiU09JTF9URU1QXzEwMCI6bnVsbCwiU09JTF9URU1QXzIwIjpudWxsLCJTT0lMX1RFTVBfNSI6IjB4MS4zNGNjY2NjY2NjY2NkcCs0IiwiU09JTF9URU1QXzUwIjpudWxsLCJTT0xBUkFEIjoiMHgwLjBwKzAiLCJTVVJfVEVNUCI6IjB4MS4wODAwMDAwMDAwMDAwcCs0IiwiVF9IUl9BVkciOiIweDEuMjgwMDAwMDAwMDAwMHArNCIsIlRfTUFYIjoiMHgxLjM5OTk5OTk5OTk5OWFwKzQiLCJUX01JTiI6IjB4MS4xZTY2NjY2NjY2NjY2cCs0In0sIm9ic2VydmF0aW9uX3RpbWUiOiIyMDI1LTAxLTAxVDAxOjAwOjAwLjAwMDAwMFoiLCJzY2hlbWFfdmVyc2lvbiI6IjEuMCIsInNlbnNvcl9pZCI6InVzY3JuLWF6LXR1Y3Nvbi0xMS13Iiwic2VudF9hdCI6IjIwMjYtMTAtMjNUMTk6MDg6NDEuNzI1NTYwWiIsInNlcXVlbmNlIjoxLCJzZXNzaW9uX2lkIjoiM2RhZWI2MTEtODUwNi00NTNjLWI1N2ItNTA3N2ZhNjVhODAzIiwic3RhdGlvbiI6IkFaX1R1Y3Nvbl8xMV9XIn19",
+  "envelope": {
+    "envelope_version": "1.0",
+    "algorithm": "Ed25519",
+    "serialization": "sensorlab-c14n-1",
+    "key_id": "ed25519-88c8b961fed79fc9ba7c5124cc859aa264943cd5aed89c608dbf63daa52d6814",
+    "telemetry": {
+      "schema_version": "1.0",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "3daeb611-8506-453c-b57b-5077fa65a803",
+      "sequence": 1,
+      "observation_time": "2025-01-01T01:00:00Z",
+      "sent_at": "2026-10-23T19:08:41.725560Z",
+      "measurements": {
+        "SOIL_MOISTURE_5": 0.029,
+        "SOIL_MOISTURE_10": 0.047,
+        "P_CALC": 0.0,
+        "LATITUDE": 32.24,
+        "LONGITUDE": -111.17,
+        "T_HR_AVG": 18.5,
+        "T_MAX": 19.6,
+        "T_MIN": 17.9,
+        "SOLARAD": 0.0,
+        "SUR_TEMP": 16.5,
+        "RH_HR_AVG": 16.0,
+        "SOIL_MOISTURE_20": null,
+        "SOIL_MOISTURE_50": null,
+        "SOIL_MOISTURE_100": null,
+        "SOIL_TEMP_5": 19.3,
+        "SOIL_TEMP_10": 19.1,
+        "SOIL_TEMP_20": null,
+        "SOIL_TEMP_50": null,
+        "SOIL_TEMP_100": null
+      }
+    },
+    "signature": "0ltGNpfRwaK53+MAzDnZ39GXaA6McJJPmCBErMaNrNnV0d52t9twxJLdIyc7WVRFbIhqDRujoPag2f/gc4USAA=="
+  }
+}

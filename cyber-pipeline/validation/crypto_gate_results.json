@@ -1,0 +1,402 @@
+{
+  "validated_at": "2026-10-23T19:26:01.421291+00:00",
+  "release": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\combined\\detector",
+  "input_sha256_before": {
+    "detector_input.parquet": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+    "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd"
+  },
+  "input_sha256_after": {
+    "detector_input.parquet": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+    "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd"
+  },
+  "source_preserved": true,
+  "output_directory": "C:\\Users\\medma\\Documents\\github\\cis\\cyber-pipeline\\outputs\\gate-20261023T192522Z-b029ea22",
+  "database": "C:\\Users\\medma\\Documents\\github\\cis\\cyber-pipeline\\.sensorlab\\gate-20261023T192522Z-b029ea22\\state\\gate.sqlite3",
+  "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+  "endpoint": "https://127.0.0.1:64254/v1/telemetry",
+  "tls_certificate_verified": true,
+  "test_passwords_persisted": false,
+  "selection": {
+    "start_inclusive": "2025-01-01T01:00:00Z",
+    "end_exclusive": "2025-01-02T01:00:00Z"
+  },
+  "replay": {
+    "state": "completed",
+    "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+    "speed": 3600.0,
+    "transmitted": 144,
+    "error": null,
+    "sensors": [
+      {
+        "sensor_id": "uscrn-az-tucson-11-w",
+        "station": "AZ_Tucson_11_W",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ca-fallbrook-5-ne",
+        "station": "CA_Fallbrook_5_NE",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ms-newton-5-ene",
+        "station": "MS_Newton_5_ENE",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ny-ithaca-13-e",
+        "station": "NY_Ithaca_13_E",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ok-goodwell-2-e",
+        "station": "OK_Goodwell_2_E",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      },
+      {
+        "sensor_id": "uscrn-ok-goodwell-2-se",
+        "station": "OK_Goodwell_2_SE",
+        "transmitted": 24,
+        "next_sequence": 25,
+        "last_observation": "2025-01-02T00:00:00+00:00",
+        "selected": true,
+        "state": "completed"
+      }
+    ]
+  },
+  "replay_elapsed_seconds": 25.688,
+  "initial_gate_accounting": {
+    "accepted": 144,
+    "rejected": 0,
+    "codes": {
+      "OK": 144
+    },
+    "sequence_gap_events": 0,
+    "outbox_count": 144,
+    "sensors": [
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-az-tucson-11-w",
+        "key_id": "ed25519-e2ccd7afb7325037857775e9be51f2bedb3ef333fa8c106e7f3ff465e83c7868",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ca-fallbrook-5-ne",
+        "key_id": "ed25519-c7bc8402fa83b94a348dda925a3f09dfc21d9d0cbc17759cbd96dd99c02a1cb6",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ms-newton-5-ene",
+        "key_id": "ed25519-9c4df9436967213d3c1addcb14d6fc524f77420a9dbe50297562a08f726257f2",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ny-ithaca-13-e",
+        "key_id": "ed25519-bb42586db7d37321be1593ee0fabbb62ce4ad56ce50b2500e089169180eda8ae",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ok-goodwell-2-e",
+        "key_id": "ed25519-c76d694890d73042449383140d33671a39d6339931d4762fcf91781627e402b7",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ok-goodwell-2-se",
+        "key_id": "ed25519-eb270f6fd7d2dfb8444c50faa5c025fe2b88e5e944f0d0b7bc1909151c855490",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      }
+    ]
+  },
+  "adversarial_decisions": {
+    "duplicate": {
+      "timestamp": "2026-10-23T19:25:57.324023Z",
+      "packet_digest": "2310e989476c19615015a999ede66d17e1e0810b4cca9ea16741eee422993387",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 1,
+      "decision_id": 145,
+      "decision": "REJECT",
+      "code": "E_REPLAY_SEQ",
+      "reason": "sequence is duplicate or out of order",
+      "warnings": [],
+      "sequence_gap": 0
+    },
+    "tampered_measurement": {
+      "timestamp": "2026-10-23T19:25:57.346686Z",
+      "packet_digest": "4223d0c9775f72d493dab7d5ba07d5c57471a73746bdcac3fc880da24a51ec1d",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 1,
+      "decision_id": 146,
+      "decision": "REJECT",
+      "code": "E_BAD_SIG",
+      "reason": "Ed25519 verification failed",
+      "warnings": [],
+      "sequence_gap": 0
+    },
+    "gap": {
+      "timestamp": "2026-10-23T19:25:57.366933Z",
+      "packet_digest": "d53fd37590ac3d7a1cf19644475ab5bbf9f2796689cc3bd8db421e3fee0a1a35",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 26,
+      "decision_id": 147,
+      "decision": "ACCEPT",
+      "code": "OK",
+      "reason": "accepted",
+      "warnings": [
+        "W_SEQ_GAP"
+      ],
+      "sequence_gap": 1
+    },
+    "out_of_order": {
+      "timestamp": "2026-10-23T19:25:57.388905Z",
+      "packet_digest": "cdea4c7e4f57edeb6e9879d0ae06b4540713fa81b5eeefd0d4bc85ff524376b7",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 25,
+      "decision_id": 148,
+      "decision": "REJECT",
+      "code": "E_REPLAY_SEQ",
+      "reason": "sequence is duplicate or out of order",
+      "warnings": [],
+      "sequence_gap": 0
+    },
+    "unauthorized_session": {
+      "timestamp": "2026-10-23T19:25:57.410963Z",
+      "packet_digest": "852127ba8b085defae9a91cba969a2b95f78b93bf7399e6d2f3e76c4d13cc30d",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "76714c80-324b-451d-bb4f-766f2e5fcce0",
+      "sequence": 1,
+      "decision_id": 149,
+      "decision": "REJECT",
+      "code": "E_UNAUTHORIZED_SESSION",
+      "reason": "session/sensor/key not authorized",
+      "warnings": [],
+      "sequence_gap": 0
+    },
+    "stale": {
+      "timestamp": "2026-10-23T19:25:57.432688Z",
+      "packet_digest": "07497e045d80069737a3da4b2059075ad2772a09e44b5a2e927ce1334d280632",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 27,
+      "decision_id": 150,
+      "decision": "REJECT",
+      "code": "E_STALE",
+      "reason": "sent_at is outside freshness tolerance",
+      "warnings": [],
+      "sequence_gap": 0
+    },
+    "future": {
+      "timestamp": "2026-10-23T19:25:57.450383Z",
+      "packet_digest": "84fe38ae1edb2cd2be8f1f64d97690b6e2612275d8679a034a8ff5e8ac6211ba",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 27,
+      "decision_id": 151,
+      "decision": "REJECT",
+      "code": "E_STALE",
+      "reason": "sent_at is outside freshness tolerance",
+      "warnings": [],
+      "sequence_gap": 0
+    },
+    "wrong_key": {
+      "timestamp": "2026-10-23T19:25:57.474338Z",
+      "packet_digest": "8cf3afb88131122b77470ec2f5181d51bc3849d801fa7cecd88535d2d03b39ac",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 27,
+      "decision_id": 152,
+      "decision": "REJECT",
+      "code": "E_UNKNOWN_KEY",
+      "reason": "untrusted sensor/station/key",
+      "warnings": [],
+      "sequence_gap": 0
+    },
+    "replay_after_restart": {
+      "timestamp": "2026-10-23T19:25:59.677130Z",
+      "packet_digest": "5b18c051f391b94affae6103154d0e4645e673efcdd4dea6cd6e1e1d5535bf0f",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 26,
+      "decision_id": 153,
+      "decision": "REJECT",
+      "code": "E_REPLAY_SEQ",
+      "reason": "sequence is duplicate or out of order",
+      "warnings": [],
+      "sequence_gap": 0
+    },
+    "valid_after_restart": {
+      "timestamp": "2026-10-23T19:25:59.702302Z",
+      "packet_digest": "aa55f0442a5c6089f33abfcb85dda7da0468ec100295ac433d420d878c0a4dfa",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 27,
+      "decision_id": 154,
+      "decision": "ACCEPT",
+      "code": "OK",
+      "reason": "accepted",
+      "warnings": [],
+      "sequence_gap": 0
+    },
+    "revoked_key": {
+      "timestamp": "2026-10-23T19:26:01.341771Z",
+      "packet_digest": "366538a647ebfaa43be436f5a305fda78a46414398ac35dbaf82cdc271255404",
+      "digest_scope": "body",
+      "sensor_id": "uscrn-az-tucson-11-w",
+      "station": "AZ_Tucson_11_W",
+      "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+      "sequence": 28,
+      "decision_id": 155,
+      "decision": "REJECT",
+      "code": "E_REVOKED_KEY",
+      "reason": "sensor key is revoked",
+      "warnings": [],
+      "sequence_gap": 0
+    }
+  },
+  "final_gate_accounting": {
+    "accepted": 146,
+    "rejected": 9,
+    "codes": {
+      "E_BAD_SIG": 1,
+      "E_REPLAY_SEQ": 3,
+      "E_REVOKED_KEY": 1,
+      "E_STALE": 2,
+      "E_UNAUTHORIZED_SESSION": 1,
+      "E_UNKNOWN_KEY": 1,
+      "OK": 146
+    },
+    "sequence_gap_events": 1,
+    "outbox_count": 146,
+    "sensors": [
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-az-tucson-11-w",
+        "key_id": "ed25519-e2ccd7afb7325037857775e9be51f2bedb3ef333fa8c106e7f3ff465e83c7868",
+        "last_sequence": 27,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ca-fallbrook-5-ne",
+        "key_id": "ed25519-c7bc8402fa83b94a348dda925a3f09dfc21d9d0cbc17759cbd96dd99c02a1cb6",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ms-newton-5-ene",
+        "key_id": "ed25519-9c4df9436967213d3c1addcb14d6fc524f77420a9dbe50297562a08f726257f2",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ny-ithaca-13-e",
+        "key_id": "ed25519-bb42586db7d37321be1593ee0fabbb62ce4ad56ce50b2500e089169180eda8ae",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ok-goodwell-2-e",
+        "key_id": "ed25519-c76d694890d73042449383140d33671a39d6339931d4762fcf91781627e402b7",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      },
+      {
+        "session_id": "71153d5b-3612-41ee-b857-aacbcced1b21",
+        "sensor_id": "uscrn-ok-goodwell-2-se",
+        "key_id": "ed25519-eb270f6fd7d2dfb8444c50faa5c025fe2b88e5e944f0d0b7bc1909151c855490",
+        "last_sequence": 24,
+        "not_before": "2026-10-23T19:25:27.828357+00:00",
+        "expires_at": "2026-10-23T20:25:26.366626+00:00",
+        "revoked": 0
+      }
+    ]
+  },
+  "restart_protection_verified": true,
+  "stage2_outbox_rows": 146,
+  "stage2_consumer_implemented": false,
+  "artifacts_sha256": {
+    "signed-https-24h.jsonl": "7948aa3e8453f8aa64152f9399089bc0607917554ff15e98ac1ba127e1782416",
+    "trusted_registry.json": "33234a162071cdcbe39b174c97c7ebb832b6780b63820e0200f146432121c722",
+    "security-events.json": "f00e1311842b39ef2d31ebe885425da876d52da0f2a76036b211ac8e1d8a9619",
+    "ca.pem": "2308c20d66d6c5df596295cad2d38a9efd16b83c03e4b431a92ef82b25acd498",
+    "server.pem": "32839a111f3c98b65d0cc2be614b1e7175edf768bef2726cbe9452b46bb4c929"
+  }
+}

@@ -1,0 +1,358 @@
+{
+  "$defs": {
+    "Measurements": {
+      "additionalProperties": false,
+      "description": "Original numeric observations; absent readings serialize as null, never NaN.",
+      "properties": {
+        "SOIL_MOISTURE_5": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Moisture 5"
+        },
+        "SOIL_MOISTURE_10": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Moisture 10"
+        },
+        "P_CALC": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "P Calc"
+        },
+        "LATITUDE": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Latitude"
+        },
+        "LONGITUDE": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Longitude"
+        },
+        "T_HR_AVG": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "T Hr Avg"
+        },
+        "T_MAX": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "T Max"
+        },
+        "T_MIN": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "T Min"
+        },
+        "SOLARAD": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Solarad"
+        },
+        "SUR_TEMP": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sur Temp"
+        },
+        "RH_HR_AVG": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rh Hr Avg"
+        },
+        "SOIL_MOISTURE_20": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Moisture 20"
+        },
+        "SOIL_MOISTURE_50": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Moisture 50"
+        },
+        "SOIL_MOISTURE_100": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Moisture 100"
+        },
+        "SOIL_TEMP_5": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Temp 5"
+        },
+        "SOIL_TEMP_10": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Temp 10"
+        },
+        "SOIL_TEMP_20": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Temp 20"
+        },
+        "SOIL_TEMP_50": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Temp 50"
+        },
+        "SOIL_TEMP_100": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Soil Temp 100"
+        }
+      },
+      "required": [
+        "SOIL_MOISTURE_5",
+        "SOIL_MOISTURE_10",
+        "P_CALC",
+        "LATITUDE",
+        "LONGITUDE",
+        "T_HR_AVG",
+        "T_MAX",
+        "T_MIN",
+        "SOLARAD",
+        "SUR_TEMP",
+        "RH_HR_AVG",
+        "SOIL_MOISTURE_20",
+        "SOIL_MOISTURE_50",
+        "SOIL_MOISTURE_100",
+        "SOIL_TEMP_5",
+        "SOIL_TEMP_10",
+        "SOIL_TEMP_20",
+        "SOIL_TEMP_50",
+        "SOIL_TEMP_100"
+      ],
+      "title": "Measurements",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One sensor observation. Sequence starts at 1 for each sensor/session pair.",
+  "oneOf": [
+    {
+      "properties": {
+        "sensor_id": {
+          "const": "uscrn-az-tucson-11-w"
+        },
+        "station": {
+          "const": "AZ_Tucson_11_W"
+        }
+      }
+    },
+    {
+      "properties": {
+        "sensor_id": {
+          "const": "uscrn-ca-fallbrook-5-ne"
+        },
+        "station": {
+          "const": "CA_Fallbrook_5_NE"
+        }
+      }
+    },
+    {
+      "properties": {
+        "sensor_id": {
+          "const": "uscrn-ms-newton-5-ene"
+        },
+        "station": {
+          "const": "MS_Newton_5_ENE"
+        }
+      }
+    },
+    {
+      "properties": {
+        "sensor_id": {
+          "const": "uscrn-ny-ithaca-13-e"
+        },
+        "station": {
+          "const": "NY_Ithaca_13_E"
+        }
+      }
+    },
+    {
+      "properties": {
+        "sensor_id": {
+          "const": "uscrn-ok-goodwell-2-e"
+        },
+        "station": {
+          "const": "OK_Goodwell_2_E"
+        }
+      }
+    },
+    {
+      "properties": {
+        "sensor_id": {
+          "const": "uscrn-ok-goodwell-2-se"
+        },
+        "station": {
+          "const": "OK_Goodwell_2_SE"
+        }
+      }
+    }
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sensor_id": {
+      "title": "Sensor Id",
+      "type": "string"
+    },
+    "station": {
+      "title": "Station",
+      "type": "string"
+    },
+    "session_id": {
+      "format": "uuid",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "observation_time": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:00:00(?:\\.0+)?(?:Z|\\+00:00)$",
+      "title": "Observation Time",
+      "type": "string"
+    },
+    "sent_at": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T.*(?:Z|\\+00:00)$",
+      "title": "Sent At",
+      "type": "string"
+    },
+    "measurements": {
+      "$ref": "#/$defs/Measurements"
+    }
+  },
+  "required": [
+    "schema_version",
+    "sensor_id",
+    "station",
+    "session_id",
+    "sequence",
+    "observation_time",
+    "sent_at",
+    "measurements"
+  ],
+  "title": "TelemetryMessage",
+  "type": "object"
+}

@@ -1,0 +1,292 @@
+{
+  "validated_at": "2026-10-23T18:47:47.401653+00:00",
+  "release": "C:\\Users\\medma\\Documents\\github\\cis\\attack-engine\\datasets\\generated\\multivariable-20261023-seed14-acb26f07\\combined\\detector",
+  "input_sha256_before": {
+    "detector_input.parquet": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+    "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd"
+  },
+  "input_sha256_after": {
+    "detector_input.parquet": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+    "data_contract.json": "bbee3a7343a0abc4c15223fd96051c41b5d8dfb6c4281a55e09c4a6c3b82c8dd"
+  },
+  "source_preserved": true,
+  "dataset": {
+    "rows": 210384,
+    "stations": {
+      "AZ_Tucson_11_W": 35064,
+      "CA_Fallbrook_5_NE": 35064,
+      "MS_Newton_5_ENE": 35064,
+      "NY_Ithaca_13_E": 35064,
+      "OK_Goodwell_2_E": 35064,
+      "OK_Goodwell_2_SE": 35064
+    },
+    "first_observation": "2022-01-01T01:00:00+00:00",
+    "last_observation": "2026-01-01T00:00:00+00:00",
+    "measurement_columns": [
+      "SOIL_MOISTURE_5",
+      "SOIL_MOISTURE_10",
+      "P_CALC",
+      "LATITUDE",
+      "LONGITUDE",
+      "T_HR_AVG",
+      "T_MAX",
+      "T_MIN",
+      "SOLARAD",
+      "SUR_TEMP",
+      "RH_HR_AVG",
+      "SOIL_MOISTURE_20",
+      "SOIL_MOISTURE_50",
+      "SOIL_MOISTURE_100",
+      "SOIL_TEMP_5",
+      "SOIL_TEMP_10",
+      "SOIL_TEMP_20",
+      "SOIL_TEMP_50",
+      "SOIL_TEMP_100"
+    ],
+    "missing_measurements": {
+      "SOIL_MOISTURE_5": 5401,
+      "SOIL_MOISTURE_10": 5335,
+      "P_CALC": 1446,
+      "LATITUDE": 0,
+      "LONGITUDE": 0,
+      "T_HR_AVG": 1116,
+      "T_MAX": 1036,
+      "T_MIN": 1029,
+      "SOLARAD": 150,
+      "SUR_TEMP": 150,
+      "RH_HR_AVG": 150,
+      "SOIL_MOISTURE_20": 73028,
+      "SOIL_MOISTURE_50": 72949,
+      "SOIL_MOISTURE_100": 73873,
+      "SOIL_TEMP_5": 3675,
+      "SOIL_TEMP_10": 3706,
+      "SOIL_TEMP_20": 72949,
+      "SOIL_TEMP_50": 72977,
+      "SOIL_TEMP_100": 72994
+    }
+  },
+  "selection": {
+    "start_inclusive": "2025-01-01T01:00:00Z",
+    "end_exclusive": "2025-01-02T01:00:00Z",
+    "rows": 144
+  },
+  "measurement_fields": [
+    "SOIL_MOISTURE_5",
+    "SOIL_MOISTURE_10",
+    "P_CALC",
+    "LATITUDE",
+    "LONGITUDE",
+    "T_HR_AVG",
+    "T_MAX",
+    "T_MIN",
+    "SOLARAD",
+    "SUR_TEMP",
+    "RH_HR_AVG",
+    "SOIL_MOISTURE_20",
+    "SOIL_MOISTURE_50",
+    "SOIL_MOISTURE_100",
+    "SOIL_TEMP_5",
+    "SOIL_TEMP_10",
+    "SOIL_TEMP_20",
+    "SOIL_TEMP_50",
+    "SOIL_TEMP_100"
+  ],
+  "runs": [
+    {
+      "speed": 3600,
+      "elapsed_seconds_including_cli_startup": 24.843,
+      "sent_at_span_seconds": 22.989106,
+      "output": "C:\\Users\\medma\\Documents\\github\\cis\\cyber-pipeline\\outputs\\validation-20261023T184719Z-b9347be0\\telemetry-speed3600.jsonl",
+      "output_sha256": "28ce58f8db0819601e6e9634bab81233855a3d0b25359a6de194bcaf0fc79eff",
+      "observation_fingerprint_sha256": "f410549258e66c28fccc6d4aa260ccfbf3e3a831061af2fc1976a364ea7fb537",
+      "null_measurements": 288,
+      "status": {
+        "state": "completed",
+        "session_id": "79bf1b06-d546-49f7-b386-f23e654b9ffa",
+        "speed": 3600.0,
+        "transmitted": 144,
+        "error": null,
+        "sensors": [
+          {
+            "sensor_id": "uscrn-az-tucson-11-w",
+            "station": "AZ_Tucson_11_W",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ca-fallbrook-5-ne",
+            "station": "CA_Fallbrook_5_NE",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ms-newton-5-ene",
+            "station": "MS_Newton_5_ENE",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ny-ithaca-13-e",
+            "station": "NY_Ithaca_13_E",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ok-goodwell-2-e",
+            "station": "OK_Goodwell_2_E",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ok-goodwell-2-se",
+            "station": "OK_Goodwell_2_SE",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          }
+        ]
+      }
+    },
+    {
+      "speed": 0,
+      "elapsed_seconds_including_cli_startup": 1.859,
+      "sent_at_span_seconds": 0.007768,
+      "output": "C:\\Users\\medma\\Documents\\github\\cis\\cyber-pipeline\\outputs\\validation-20261023T184719Z-b9347be0\\telemetry-speed0.jsonl",
+      "output_sha256": "43a604f5b6597a0bae39d9e3ce44b6ca838df378abed9724a71db27af71e0d00",
+      "observation_fingerprint_sha256": "f410549258e66c28fccc6d4aa260ccfbf3e3a831061af2fc1976a364ea7fb537",
+      "null_measurements": 288,
+      "status": {
+        "state": "completed",
+        "session_id": "48c62c93-e408-4491-98f7-fbfeb029cc2a",
+        "speed": 0.0,
+        "transmitted": 144,
+        "error": null,
+        "sensors": [
+          {
+            "sensor_id": "uscrn-az-tucson-11-w",
+            "station": "AZ_Tucson_11_W",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ca-fallbrook-5-ne",
+            "station": "CA_Fallbrook_5_NE",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ms-newton-5-ene",
+            "station": "MS_Newton_5_ENE",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ny-ithaca-13-e",
+            "station": "NY_Ithaca_13_E",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ok-goodwell-2-e",
+            "station": "OK_Goodwell_2_E",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          },
+          {
+            "sensor_id": "uscrn-ok-goodwell-2-se",
+            "station": "OK_Goodwell_2_SE",
+            "transmitted": 24,
+            "next_sequence": 25,
+            "last_observation": "2025-01-02T00:00:00+00:00",
+            "selected": true,
+            "state": "completed"
+          }
+        ]
+      }
+    }
+  ],
+  "observation_order_and_values_reproducible": true,
+  "private_files_opened": [],
+  "interactive_windows_terminal": {
+    "commands": [
+      "p",
+      "s",
+      "r"
+    ],
+    "paused_transmitted": 66,
+    "status_while_paused_transmitted": 66,
+    "completed_transmitted": 144,
+    "per_sensor_transmitted": 24,
+    "output": "C:\\Users\\medma\\Documents\\github\\cis\\cyber-pipeline\\outputs\\interactive-24h.jsonl",
+    "output_sha256": "a0688b1d3e8fad0951dbf1e33dbe3e4acf2534547ec4ce1fc4bdd80294faa00f",
+    "observation_fingerprint_sha256": "f410549258e66c28fccc6d4aa260ccfbf3e3a831061af2fc1976a364ea7fb537",
+    "sent_at_span_seconds": 36.718181
+  },
+  "telemetry_schema_sha256": "bb283e98d191a10ca4863deafa3b1f1e7f1300de4fbde471e9cc76d0e0c7caec",
+  "verification": {
+    "pytest": {
+      "passed": 62,
+      "skipped": 0,
+      "elapsed_seconds": 9.67,
+      "command": "uv run pytest -q --basetemp=.pytest-tmp-final --tb=short"
+    },
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "python_files_checked": 16,
+    "uv_lock_check": "passed",
+    "uv_build": "source distribution and wheel built successfully"
+  },
+  "implementation_sha256": {
+    "pyproject.toml": "89bfb34e0cd1215292df5c9f92516a309d31ae2d1cd2aee3acb1b3210ea2079a",
+    "uv.lock": "117496dd41ab167d9f85efcfd0488d3ba94cbef8a4cd22564e1228d7fbd3ea21",
+    "schemas/telemetry-v1.schema.json": "bb283e98d191a10ca4863deafa3b1f1e7f1300de4fbde471e9cc76d0e0c7caec",
+    "src/sensorlab/__init__.py": "1f8cc6e13d28c81a5c79567b2e4207e67a9cff0322c91164cc735093e0b8f082",
+    "src/sensorlab/cli.py": "b73d25b0f8dfb8a5bea6aaa091be4cec1cc973aabec55bfe896f2a9e4113bf43",
+    "src/sensorlab/clock.py": "3a4885cba247e8e1ab0250824297fb675b381e7aad8f56bde111c169fe8c6332",
+    "src/sensorlab/dataset.py": "5672cad4075bcf2ded1b2cec44aeaea37ce672927f9bf5e4d7ea55cc422bf463",
+    "src/sensorlab/playback.py": "01fb925b5258b3534fc853588eb8c0d49f1dd1c5f1fbea96e726896015844c21",
+    "src/sensorlab/registry.py": "7cf0c55c95970f1c7dec04cb5cbe76b43076bb2581430db15092d3976e2bc073",
+    "src/sensorlab/sensor.py": "e9d3f82e0a72045642746eb61cfd9678c43603caa970f9ec3adb1a5528663204",
+    "src/sensorlab/telemetry.py": "783294fa75d74caabd548485b42858353169255a1fd3fa6b3766936ddb0210fc",
+    "src/sensorlab/terminal.py": "d595e0faefee9aa55f734b02ce6422c74fb3ebe3414f5aab212dc26afd3ad35c",
+    "src/sensorlab/transport.py": "cfb7d985958e287eeb2093d74cfaba7c3e9a5a9a10eaf8139c207111af24225d",
+    "scripts/validate_real_replay.py": "4e1e1682e2af874bfbd4f3104b685ec61f98f0186d4ef9eb04af34f7c654d022",
+    "tests/conftest.py": "a04bd5d137e0871b70747ad4470d3584645a7ba31f77c5c89769a4961b8303a0",
+    "tests/test_cli.py": "ea6bc6739e79695adc308aba84952f415150b890be52f2493790e8862e8520d2",
+    "tests/test_dataset.py": "91ba158592d64912beaebac5a6c619e9ffb86035be138c0a17f0d8b9ef5296c0",
+    "tests/test_playback.py": "3de61777191fd9a737711ef8a2fcd1b8f4decb395792eaa8fa9a18e62d7d9d6e",
+    "tests/test_real_dataset.py": "36d2ae540d5d9c1af2c3f2c0a1a255db75de74c4da3205d751d500db1b6d945e"
+  }
+}

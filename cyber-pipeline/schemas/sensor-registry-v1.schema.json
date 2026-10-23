@@ -1,0 +1,70 @@
+{
+  "$defs": {
+    "RegistryEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "sensor_id": {
+          "title": "Sensor Id",
+          "type": "string"
+        },
+        "station": {
+          "title": "Station",
+          "type": "string"
+        },
+        "key_id": {
+          "pattern": "^ed25519-[a-f0-9]{64}$",
+          "title": "Key Id",
+          "type": "string"
+        },
+        "public_key": {
+          "title": "Public Key",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "revoked"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sensor_id",
+        "station",
+        "key_id",
+        "public_key",
+        "status"
+      ],
+      "title": "RegistryEntry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "registry_version": {
+      "const": "1.0",
+      "title": "Registry Version",
+      "type": "string"
+    },
+    "algorithm": {
+      "const": "Ed25519",
+      "title": "Algorithm",
+      "type": "string"
+    },
+    "sensors": {
+      "items": {
+        "$ref": "#/$defs/RegistryEntry"
+      },
+      "title": "Sensors",
+      "type": "array"
+    }
+  },
+  "required": [
+    "registry_version",
+    "algorithm",
+    "sensors"
+  ],
+  "title": "TrustedRegistry",
+  "type": "object"
+}

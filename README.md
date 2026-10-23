@@ -4,7 +4,7 @@
 
 Developed for **TSYP14 · Ground Truth Under Attack · Track 2: False Data Injection**, this repository brings together the USCRN reference delivery and a Python attack engine. It follows the experiment from source-data preparation through coordinated multi-variable attacks to separate evaluator and detector datasets.
 
-**Current implementation:** dataset validation and profiling, deterministic scheduling, five attack families, train-only contextual calibration, multi-variable injection, and validated dataset export. The latest recorded full validation passed **544 tests**, including real-USCRN integration cases. AI benchmarking, ERA5 integration, a Sensor Emulator, and cryptographic signing are outside the implemented scope.
+**Current implementation:** dataset validation and profiling, deterministic scheduling, five attack families, train-only contextual calibration, multi-variable injection, validated dataset export, and an independent six-sensor telemetry emulator with Ed25519 identities and signed output. Recorded validation passed **544 Attack Engine tests** and **130 SensorLab tests**, including real-USCRN cases. AI benchmarking, ERA5 integration, and secure network ingestion are outside the implemented scope.
 
 ## Contents
 
@@ -34,6 +34,8 @@ Developed for **TSYP14 · Ground Truth Under Attack · Track 2: False Data Injec
 | Multi-target foundation | Shared per-variable request/result structures, selected targets, changed-variable reporting, and row/cell accounting | Reusable coordination across channels |
 | Multi-variable generation | All five families support target subsets and combinations, unit-aware settings, temporal checks, and cross-variable constraints | Five independently validated campaigns |
 | Multi-variable export | Exact cell truth, generalized row truth, a separate detector release, and an independent combined campaign | Six real-USCRN export bundles |
+| Sensor Emulator | Six stable virtual sensors, strict telemetry schema, accelerated playback, pause/resume/stop, status, and NDJSON output | Validated 24-hour replay: 144 messages, 24 per sensor |
+| Sensor Identity | Six independent Ed25519 key pairs, encrypted private storage, trusted registry, signed envelopes and public-key verification | 144 real messages verified; measurement tampering and revoked keys rejected |
 
 The original single-target configuration remains supported. Its seed-14 regression still produces **9,679 modifications**, including **690 Stealth** modifications.
 
@@ -54,11 +56,16 @@ flowchart TD
     J --> K[Validated atomic export]
     K --> L[Evaluator bundle: full truth and provenance]
     K --> M[Detector release: observations and permitted labels]
+    M --> N[SensorLab: observable input only]
+    N --> O[Six virtual sensors: versioned local telemetry]
 ```
 
 The scheduler decides where an event can occur; transformations propose values; the executor validates and accounts for finalized changes. The exporter consumes the execution results and checks the resulting datasets before publication. Source observations remain unchanged during engine execution and export.
 
 The implementation uses **Python 3.12+**, **uv**, **Pandas**, **NumPy**, **PyArrow**, **Pydantic**, and **PyYAML**, with **Pytest** and **Ruff** for validation. Dependency resolution is recorded in [uv.lock](attack-engine/uv.lock).
+
+The independent [SensorLab project](cyber-pipeline/README.md) uses its own environment and lockfile,
+with Typer for the CLI. It reads only detector input and its data contract; it does not consume labels.
 
 ## Reference dataset
 
@@ -364,6 +371,12 @@ CIS-GRSS/
 │   ├── data/                         # Clean reference data and quality report
 │   ├── docs/                         # Dataset/selection/quality documentation
 │   └── figures/                      # Reference data visualizations
+├── cyber-pipeline/                    # Independent SensorLab Python project
+│   ├── src/sensorlab/                 # Sensors, telemetry, playback, CLI, local sinks
+│   ├── schemas/                      # Versioned telemetry JSON Schema
+│   ├── tests/                        # Synthetic and real-release validation
+│   ├── validation/                   # Recorded replay evidence
+│   └── outputs/                      # Local telemetry; git-ignored
 └── attack-engine/
     ├── configs/                      # Dataset and baseline attack/scheduling YAML
     │   └── campaigns/                # Five independent campaigns plus combined
@@ -396,9 +409,11 @@ CIS-GRSS/
 | [Multi-variable Stealth](attack-engine/MULTIVARIABLE_STEALTH_REPORT.md) | Secondary-variable coordination strategy |
 | [All-family report](attack-engine/MULTIVARIABLE_ALL_FAMILIES_REPORT.md) | Current five-family multi-variable behavior and generation evidence |
 | [Multi-variable export report](attack-engine/MULTIVARIABLE_EXPORT_REPORT.md) | Current export schema, results, checksums, and validation evidence |
+| [Sensor Emulator report](cyber-pipeline/SENSOR_EMULATOR_REPORT.md) | Six-sensor architecture, CLI, real 24-hour replay, hashes, and validation |
+| [Sensor Identity report](cyber-pipeline/SENSOR_IDENTITY_REPORT.md) | Ed25519 provisioning, signing format, verification, tamper tests, and real replay |
 
 Earlier phase documents describe their implementation stage; the two current multi-variable reports document the later extensions.
 
 The engine currently accepts Parquet input and the three explicitly supported attack variables. Conservative scheduling and physical checks can leave substantial quotas unfilled. Contextual feasibility does not establish that an attack evades a trained detector, and configured relationships do not replace a validated physical simulator.
 
-The repository stops at **attack generation, dataset export, and validation**. It does not yet implement AI detector benchmarking, ERA5 integration, a Sensor Emulator, cryptographic signing, or a hosted API/frontend.
+The repository currently covers **attack generation, dataset export, local sensor emulation, Ed25519 identity/signing, and validation**. It does not yet implement AI detector benchmarking, ERA5 integration, session authorization, network anti-replay enforcement, or a hosted ingestion API/frontend.

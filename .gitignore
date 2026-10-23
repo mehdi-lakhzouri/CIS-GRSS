@@ -4,6 +4,10 @@
 .env
 .env.*
 
+# Sensor identity material (never commit private keys)
+**/.sensorlab/
+**/*.private.pem
+
 # Python
 **/__pycache__/
 *.py[cod]

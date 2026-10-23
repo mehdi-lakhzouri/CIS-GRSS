@@ -1,0 +1,38 @@
+[project]
+name = "sensorlab"
+version = "0.1.0"
+description = "Six-sensor, read-only USCRN telemetry emulator for TSYP14."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "cryptography>=50.0.2",
+    "fastapi>=0.162.0",
+    "httpx>=0.28.1",
+    "pandas>=3.0",
+    "pyarrow>=17",
+    "pydantic>=2.8",
+    "typer>=0.16",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+sensorlab = "sensorlab.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.11.25,<0.12"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = ["pytest>=8.3", "ruff>=0.6"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "N", "C4", "PTH", "BLE"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+markers = ["real_dataset: read-only integration against the combined detector release"]
