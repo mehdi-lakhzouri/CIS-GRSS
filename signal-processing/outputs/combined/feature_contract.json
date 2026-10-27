@@ -1,0 +1,290 @@
+{
+  "contract_version": "1.0",
+  "file": "signal_features.parquet",
+  "keys": [
+    "station",
+    "time"
+  ],
+  "row_alignment": "exactly the input rows, keys and order of detector_input.parquet",
+  "time_semantics": "UTC, end of the measured hour (as in the input)",
+  "causality": "a feature at time t uses only rows of the same station with time <= t",
+  "fitting": "all parameters fitted on the train partition only; no labels used",
+  "attack_families": [
+    "spike",
+    "bias",
+    "drift",
+    "replay",
+    "stealth"
+  ],
+  "params_sha256": "960fefa7a0922dc0729dca0814ba3083c6c2eaa66791df610906509011d43ac7",
+  "constants": {
+    "moisture_resolution": 0.001,
+    "rain_resolution_mm": 0.1,
+    "gap_reset_hours": 6,
+    "rain_window_hours": 3,
+    "rain_threshold_mm": 0.5,
+    "xcorr_window_hours": 72,
+    "xcorr_max_lag_hours": 6,
+    "xcorr_min_pairs": 48,
+    "replay_window_hours": 12,
+    "rough_window_hours": 24,
+    "rough_min_periods": 18,
+    "scale_floor": 0.0005,
+    "cusum_drift_min": 0.5,
+    "cusum_drift_quantile": 0.9,
+    "cusum_drift_window_hours": 24,
+    "cusum_drift_min_periods": 18,
+    "cusum_threshold_quantile": 0.995,
+    "hold_run_quantile": 0.99,
+    "hold_min_hours": 6,
+    "hold_max_hours": 48,
+    "huber_c": 1.345,
+    "tau_min_hours": 1.0,
+    "tau_max_hours": 10000.0,
+    "min_fit_pairs": 500
+  },
+  "suggested_cusum_alarm": {
+    "AZ_Tucson_11_W": {
+      "5": {
+        "cusum_drift": 0.5,
+        "cusum_h": 15.918347454668986,
+        "max_hold_hours": 13
+      },
+      "10": {
+        "cusum_drift": 0.5,
+        "cusum_h": 20.962079933493104,
+        "max_hold_hours": 13
+      }
+    },
+    "CA_Fallbrook_5_NE": {
+      "5": {
+        "cusum_drift": 0.5,
+        "cusum_h": 15.310595131249102,
+        "max_hold_hours": 28
+      },
+      "10": {
+        "cusum_drift": 0.5,
+        "cusum_h": 5.616402214574176,
+        "max_hold_hours": 28
+      }
+    },
+    "MS_Newton_5_ENE": {
+      "5": {
+        "cusum_drift": 1.9971361696325962,
+        "cusum_h": 285.9902040221803,
+        "max_hold_hours": 19
+      },
+      "10": {
+        "cusum_drift": 1.4546824637117344,
+        "cusum_h": 208.67010020460862,
+        "max_hold_hours": 19
+      }
+    },
+    "NY_Ithaca_13_E": {
+      "5": {
+        "cusum_drift": 0.9476881869988124,
+        "cusum_h": 84.66979684902113,
+        "max_hold_hours": 28
+      },
+      "10": {
+        "cusum_drift": 0.8668266260783364,
+        "cusum_h": 84.74115631020899,
+        "max_hold_hours": 28
+      }
+    },
+    "OK_Goodwell_2_E": {
+      "5": {
+        "cusum_drift": 0.5,
+        "cusum_h": 67.953514345077,
+        "max_hold_hours": 12
+      },
+      "10": {
+        "cusum_drift": 0.5,
+        "cusum_h": 71.80050792011313,
+        "max_hold_hours": 12
+      }
+    },
+    "OK_Goodwell_2_SE": {
+      "5": {
+        "cusum_drift": 0.5,
+        "cusum_h": 124.66314585604614,
+        "max_hold_hours": 23
+      },
+      "10": {
+        "cusum_drift": 0.5,
+        "cusum_h": 148.2652417358882,
+        "max_hold_hours": 23
+      }
+    }
+  },
+  "columns": {
+    "sp_dtheta_dry_5": {
+      "meaning": "Hourly first difference of SOIL_MOISTURE_5, kept only when rain over the last 3 h (P_CALC, incl. t) < 0.5 mm, else 0. Unexplained dry-weather jumps.",
+      "unit": "m3/m3 per h",
+      "window": "t-1..t (rain: t-2..t)",
+      "nan_rule": "NaN if SOIL_MOISTURE_5 at t or t-1 is NaN, or any rain value in t-2..t is NaN",
+      "targets": [
+        "spike",
+        "bias",
+        "drift"
+      ]
+    },
+    "sp_dtheta_dry_10": {
+      "meaning": "Hourly first difference of SOIL_MOISTURE_10, kept only when rain over the last 3 h (P_CALC, incl. t) < 0.5 mm, else 0. Unexplained dry-weather jumps.",
+      "unit": "m3/m3 per h",
+      "window": "t-1..t (rain: t-2..t)",
+      "nan_rule": "NaN if SOIL_MOISTURE_10 at t or t-1 is NaN, or any rain value in t-2..t is NaN",
+      "targets": [
+        "spike",
+        "bias",
+        "drift"
+      ]
+    },
+    "sp_innov_5": {
+      "meaning": "Observed minus drydown prediction theta_r + (theta_prev - theta_r)*exp(-m/tau) + rain response, iterated from the last valid observation m <= 6 h earlier.",
+      "unit": "m3/m3",
+      "window": "last valid observation within 6 h, rain since then",
+      "nan_rule": "NaN if SOIL_MOISTURE_5 at t is NaN, no valid value in the previous 6 h (filter reset), or rain missing in the bridged hours",
+      "targets": [
+        "spike",
+        "bias",
+        "drift",
+        "stealth"
+      ]
+    },
+    "sp_innov_10": {
+      "meaning": "Observed minus drydown prediction theta_r + (theta_prev - theta_r)*exp(-m/tau) + rain response, iterated from the last valid observation m <= 6 h earlier.",
+      "unit": "m3/m3",
+      "window": "last valid observation within 6 h, rain since then",
+      "nan_rule": "NaN if SOIL_MOISTURE_10 at t is NaN, no valid value in the previous 6 h (filter reset), or rain missing in the bridged hours",
+      "targets": [
+        "spike",
+        "bias",
+        "drift",
+        "stealth"
+      ]
+    },
+    "sp_innov_z_5": {
+      "meaning": "sp_innov_5 / (1.4826 * train MAD of the innovation), station-specific.",
+      "unit": "dimensionless",
+      "window": "as sp_innov_5",
+      "nan_rule": "NaN where sp_innov_5 is NaN",
+      "targets": [
+        "spike",
+        "bias",
+        "drift",
+        "stealth"
+      ]
+    },
+    "sp_innov_z_10": {
+      "meaning": "sp_innov_10 / (1.4826 * train MAD of the innovation), station-specific.",
+      "unit": "dimensionless",
+      "window": "as sp_innov_10",
+      "nan_rule": "NaN where sp_innov_10 is NaN",
+      "targets": [
+        "spike",
+        "bias",
+        "drift",
+        "stealth"
+      ]
+    },
+    "sp_cusum_5": {
+      "meaning": "Two-sided CUSUM max(S+, S-) of sp_innov_z_5 with train-fitted drift k_c. State is held (not updated) while 3 h rain >= 0.5 mm or rain unknown, for at most the station's train-fitted cusum_max_hold_hours per spell (P_CALC is attackable), and reset to 0 after more than 6 h without a valid z. Compare with threshold h.",
+      "unit": "dimensionless",
+      "window": "recursive since the last reset",
+      "nan_rule": "NaN where sp_innov_z_5 is NaN (state unchanged)",
+      "targets": [
+        "drift",
+        "bias",
+        "stealth"
+      ]
+    },
+    "sp_cusum_10": {
+      "meaning": "Two-sided CUSUM max(S+, S-) of sp_innov_z_10 with train-fitted drift k_c. State is held (not updated) while 3 h rain >= 0.5 mm or rain unknown, for at most the station's train-fitted cusum_max_hold_hours per spell (P_CALC is attackable), and reset to 0 after more than 6 h without a valid z. Compare with threshold h.",
+      "unit": "dimensionless",
+      "window": "recursive since the last reset",
+      "nan_rule": "NaN where sp_innov_z_10 is NaN (state unchanged)",
+      "targets": [
+        "drift",
+        "bias",
+        "stealth"
+      ]
+    },
+    "sp_depth_gap": {
+      "meaning": "SOIL_MOISTURE_5 - SOIL_MOISTURE_10 (vertical coherence).",
+      "unit": "m3/m3",
+      "window": "t",
+      "nan_rule": "NaN if either depth is NaN at t",
+      "targets": [
+        "bias",
+        "drift",
+        "stealth",
+        "spike"
+      ]
+    },
+    "sp_depth_gap_z": {
+      "meaning": "(sp_depth_gap - train median) / (1.4826 * train MAD), station-specific.",
+      "unit": "dimensionless",
+      "window": "t",
+      "nan_rule": "NaN where sp_depth_gap is NaN",
+      "targets": [
+        "bias",
+        "drift",
+        "stealth",
+        "spike"
+      ]
+    },
+    "sp_depth_xcorr": {
+      "meaning": "Max over lags L = 0..6 h of the Pearson correlation between diff(SM5) at t-L and diff(SM10) at t (10 cm lagging), over a trailing window.",
+      "unit": "dimensionless [-1, 1]",
+      "window": "72 h trailing, >= 48 valid pairs",
+      "nan_rule": "NaN if either depth is NaN at t, fewer than 48 pairs, or zero variance",
+      "targets": [
+        "replay",
+        "bias",
+        "drift",
+        "stealth"
+      ]
+    },
+    "sp_replay_match": {
+      "meaning": "1 if the trailing 12 h window of (SM5, SM10, P_CALC), rounded to sensor precision (0.001 m3/m3, 0.1 mm), exactly equals an earlier window of the same station. Windows with any NaN or a flat SM5 or SM10 are skipped (never match).",
+      "unit": "flag {0, 1}",
+      "window": "12 h trailing vs. all earlier windows of the station",
+      "nan_rule": "Never NaN: 0 when the window is ineligible (contains NaN or is flat)",
+      "targets": [
+        "replay"
+      ]
+    },
+    "sp_replay_run": {
+      "meaning": "Consecutive hours with sp_replay_match = 1, up to and including t.",
+      "unit": "h",
+      "window": "recursive",
+      "nan_rule": "Never NaN: 0 where sp_replay_match = 0",
+      "targets": [
+        "replay"
+      ]
+    },
+    "sp_rough_5": {
+      "meaning": "Trailing std (ddof=1) of the second difference of SOIL_MOISTURE_5: noise texture. Injected ramps/plateaus are too smooth; spikes are too rough.",
+      "unit": "m3/m3 per h^2",
+      "window": "24 h trailing (t-23..t), >= 18 valid second differences",
+      "nan_rule": "NaN if SOIL_MOISTURE_5 at t is NaN or fewer than 18 valid values",
+      "targets": [
+        "drift",
+        "stealth",
+        "spike"
+      ]
+    },
+    "sp_rough_10": {
+      "meaning": "Trailing std (ddof=1) of the second difference of SOIL_MOISTURE_10: noise texture. Injected ramps/plateaus are too smooth; spikes are too rough.",
+      "unit": "m3/m3 per h^2",
+      "window": "24 h trailing (t-23..t), >= 18 valid second differences",
+      "nan_rule": "NaN if SOIL_MOISTURE_10 at t is NaN or fewer than 18 valid values",
+      "targets": [
+        "drift",
+        "stealth",
+        "spike"
+      ]
+    }
+  }
+}

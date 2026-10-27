@@ -1,0 +1,45 @@
+[project]
+name = "signal-processing"
+version = "0.1.0"
+description = "Causal, train-fitted signal features for false-data-injection detection on in-situ soil-moisture time series (TSYP14, Track 2)."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "pandas>=2.2",
+    "pyarrow>=17",
+    "pydantic>=2.8",
+    "pyyaml>=6.0",
+    "typer>=0.12",
+]
+
+[project.scripts]
+signal-processing = "signal_processing.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.11.25,<0.14"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "N", "C4", "PTH", "BLE"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["signal_processing"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.6",
+]
+report = [
+    "matplotlib>=3.8",
+]

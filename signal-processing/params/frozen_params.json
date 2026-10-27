@@ -1,0 +1,269 @@
+{
+  "schema_version": "1.0",
+  "input_sha256": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+  "input_rows": 210384,
+  "train_rows": 105120,
+  "partition_source": "attack-engine/configs/dataset.yaml",
+  "partition_rule": "start <= time - 1h < end (UTC, time marks the end of the measured hour)",
+  "partitions": [
+    {
+      "name": "train",
+      "start": "2022-01-01T00:00:00Z",
+      "end": "2024-01-01T00:00:00Z"
+    },
+    {
+      "name": "validation",
+      "start": "2024-01-01T00:00:00Z",
+      "end": "2025-01-01T00:00:00Z"
+    },
+    {
+      "name": "test",
+      "start": "2025-01-01T00:00:00Z",
+      "end": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "constants": {
+    "moisture_resolution": 0.001,
+    "rain_resolution_mm": 0.1,
+    "gap_reset_hours": 6,
+    "rain_window_hours": 3,
+    "rain_threshold_mm": 0.5,
+    "xcorr_window_hours": 72,
+    "xcorr_max_lag_hours": 6,
+    "xcorr_min_pairs": 48,
+    "replay_window_hours": 12,
+    "rough_window_hours": 24,
+    "rough_min_periods": 18,
+    "scale_floor": 0.0005,
+    "cusum_drift_min": 0.5,
+    "cusum_drift_quantile": 0.9,
+    "cusum_drift_window_hours": 24,
+    "cusum_drift_min_periods": 18,
+    "cusum_threshold_quantile": 0.995,
+    "hold_run_quantile": 0.99,
+    "hold_min_hours": 6,
+    "hold_max_hours": 48,
+    "huber_c": 1.345,
+    "tau_min_hours": 1.0,
+    "tau_max_hours": 10000.0,
+    "min_fit_pairs": 500
+  },
+  "stations": {
+    "AZ_Tucson_11_W": {
+      "depths": {
+        "5": {
+          "drydown": {
+            "theta_r": 0.03435722033942858,
+            "tau_hours": 70.96487198523148,
+            "k_rain_per_mm": 0.0028033462003380707,
+            "n_fit": 17352
+          },
+          "innov_median": -0.00013093239136123536,
+          "innov_scale": 0.0022805979749446854,
+          "n_innov": 17353,
+          "cusum_drift": 0.5,
+          "cusum_h": 15.918347454668986
+        },
+        "10": {
+          "drydown": {
+            "theta_r": 0.037729647533694115,
+            "tau_hours": 133.66390781569467,
+            "k_rain_per_mm": 0.0017643157591761035,
+            "n_fit": 17352
+          },
+          "innov_median": -2.779905760789958e-05,
+          "innov_scale": 0.0016483591599626944,
+          "n_innov": 17353,
+          "cusum_drift": 0.5,
+          "cusum_h": 20.962079933493104
+        }
+      },
+      "depth_gap_median": -0.020999999999999998,
+      "depth_gap_scale": 0.0118608,
+      "cusum_max_hold_hours": 13,
+      "train_rows": 17520,
+      "train_replay_windows": 17208,
+      "train_replay_matches": 0
+    },
+    "CA_Fallbrook_5_NE": {
+      "depths": {
+        "5": {
+          "drydown": {
+            "theta_r": 0.056508408837225264,
+            "tau_hours": 361.58430755047095,
+            "k_rain_per_mm": 0.0009263396763861004,
+            "n_fit": 17513
+          },
+          "innov_median": -0.00042695263294384445,
+          "innov_scale": 0.0018019806635133147,
+          "n_innov": 17514,
+          "cusum_drift": 0.5,
+          "cusum_h": 15.310595131249102
+        },
+        "10": {
+          "drydown": {
+            "theta_r": 0.17096418370336372,
+            "tau_hours": 466.1210980423455,
+            "k_rain_per_mm": 0.000725185721559987,
+            "n_fit": 17513
+          },
+          "innov_median": 3.650887163275662e-05,
+          "innov_scale": 0.0013968126559839816,
+          "n_innov": 17514,
+          "cusum_drift": 0.5,
+          "cusum_h": 5.616402214574176
+        }
+      },
+      "depth_gap_median": -0.028999999999999998,
+      "depth_gap_scale": 0.014826000000000013,
+      "cusum_max_hold_hours": 28,
+      "train_rows": 17520,
+      "train_replay_windows": 17490,
+      "train_replay_matches": 0
+    },
+    "MS_Newton_5_ENE": {
+      "depths": {
+        "5": {
+          "drydown": {
+            "theta_r": -0.017218659353156408,
+            "tau_hours": 750.3084123890059,
+            "k_rain_per_mm": 0.001409891838252886,
+            "n_fit": 17505
+          },
+          "innov_median": 0.00014147236750117198,
+          "innov_scale": 0.0005074905093603266,
+          "n_innov": 17509,
+          "cusum_drift": 1.9971361696325962,
+          "cusum_h": 285.9902040221803
+        },
+        "10": {
+          "drydown": {
+            "theta_r": 0.07585418915798783,
+            "tau_hours": 2402.9807337706256,
+            "k_rain_per_mm": 0.0008044223182968497,
+            "n_fit": 17503
+          },
+          "innov_median": 4.665974960738062e-05,
+          "innov_scale": 0.0005,
+          "n_innov": 17508,
+          "cusum_drift": 1.4546824637117344,
+          "cusum_h": 208.67010020460862
+        }
+      },
+      "depth_gap_median": -0.019000000000000003,
+      "depth_gap_scale": 0.029651999999999984,
+      "cusum_max_hold_hours": 19,
+      "train_rows": 17520,
+      "train_replay_windows": 16480,
+      "train_replay_matches": 0
+    },
+    "NY_Ithaca_13_E": {
+      "depths": {
+        "5": {
+          "drydown": {
+            "theta_r": -0.1508102338955175,
+            "tau_hours": 1433.4776094102813,
+            "k_rain_per_mm": 0.0012352171981915945,
+            "n_fit": 16600
+          },
+          "innov_median": 0.00026486481797591277,
+          "innov_scale": 0.001036380125318033,
+          "n_innov": 16624,
+          "cusum_drift": 0.9476881869988124,
+          "cusum_h": 84.66979684902113
+        },
+        "10": {
+          "drydown": {
+            "theta_r": 0.011943094841237446,
+            "tau_hours": 713.3380645741668,
+            "k_rain_per_mm": 0.0014820379695218032,
+            "n_fit": 16071
+          },
+          "innov_median": 0.0002494359503306398,
+          "innov_scale": 0.0011585971573000234,
+          "n_innov": 16108,
+          "cusum_drift": 0.8668266260783364,
+          "cusum_h": 84.74115631020899
+        }
+      },
+      "depth_gap_median": 0.025000000000000022,
+      "depth_gap_scale": 0.014826000000000013,
+      "cusum_max_hold_hours": 28,
+      "train_rows": 17520,
+      "train_replay_windows": 15418,
+      "train_replay_matches": 0
+    },
+    "OK_Goodwell_2_E": {
+      "depths": {
+        "5": {
+          "drydown": {
+            "theta_r": 0.06230701359015454,
+            "tau_hours": 245.62320016477196,
+            "k_rain_per_mm": 0.002354108529078936,
+            "n_fit": 14689
+          },
+          "innov_median": 2.3130605154020323e-05,
+          "innov_scale": 0.001368147721017053,
+          "n_innov": 14693,
+          "cusum_drift": 0.5,
+          "cusum_h": 67.953514345077
+        },
+        "10": {
+          "drydown": {
+            "theta_r": 0.10456202151489909,
+            "tau_hours": 329.6168934097148,
+            "k_rain_per_mm": 0.0011562844071273338,
+            "n_fit": 14778
+          },
+          "innov_median": 2.5560558067044825e-05,
+          "innov_scale": 0.0013254103459851732,
+          "n_innov": 14783,
+          "cusum_drift": 0.5,
+          "cusum_h": 71.80050792011313
+        }
+      },
+      "depth_gap_median": -0.03899999999999999,
+      "depth_gap_scale": 0.016308600000000003,
+      "cusum_max_hold_hours": 12,
+      "train_rows": 17520,
+      "train_replay_windows": 14575,
+      "train_replay_matches": 0
+    },
+    "OK_Goodwell_2_SE": {
+      "depths": {
+        "5": {
+          "drydown": {
+            "theta_r": 0.11216445446294646,
+            "tau_hours": 464.077771475608,
+            "k_rain_per_mm": 0.000676250646683986,
+            "n_fit": 17358
+          },
+          "innov_median": 1.6865943636493186e-05,
+          "innov_scale": 0.0013453748048376827,
+          "n_innov": 17358,
+          "cusum_drift": 0.5,
+          "cusum_h": 124.66314585604614
+        },
+        "10": {
+          "drydown": {
+            "theta_r": 0.1580030871867594,
+            "tau_hours": 753.0062999839984,
+            "k_rain_per_mm": 0.00013976733963338796,
+            "n_fit": 17471
+          },
+          "innov_median": 1.990283374003754e-05,
+          "innov_scale": 0.0014157015645156635,
+          "n_innov": 17471,
+          "cusum_drift": 0.5,
+          "cusum_h": 148.2652417358882
+        }
+      },
+      "depth_gap_median": -0.035,
+      "depth_gap_scale": 0.02372160000000002,
+      "cusum_max_hold_hours": 23,
+      "train_rows": 17520,
+      "train_replay_windows": 17147,
+      "train_replay_matches": 0
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "rows": 210384,
+  "stations": 6,
+  "repeats": 5,
+  "per_row_us": {
+    "median": 4.452856205711483,
+    "p95": 6.063933949439463,
+    "basis": "station chunk wall time / chunk rows"
+  },
+  "full_transform_seconds_median": 0.9394906999077648,
+  "rows_per_second": 223934.09537811775,
+  "peak_memory_mib_tracemalloc": 57.79801273345947,
+  "machine": {
+    "system": "Windows",
+    "release": "11",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 141 Stepping 1, GenuineIntel",
+    "cpu_count": 12
+  },
+  "package_versions": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "pyarrow": "26.0.0",
+    "pydantic": "2.14.1",
+    "pyyaml": "6.0.3",
+    "typer": "0.27.3"
+  },
+  "code_version": {
+    "package": "signal-processing",
+    "version": "0.1.0",
+    "source_sha256": "e838b7e4e97ceb81d438f877cefa590607306ed2037a2743921d1147d4e8ed0f"
+  }
+}

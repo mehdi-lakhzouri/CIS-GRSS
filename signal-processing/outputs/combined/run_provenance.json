@@ -1,0 +1,61 @@
+{
+  "input": {
+    "file": "detector_input.parquet",
+    "sha256": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+    "rows": 210384
+  },
+  "params": {
+    "file": "frozen_params.json",
+    "sha256": "960fefa7a0922dc0729dca0814ba3083c6c2eaa66791df610906509011d43ac7",
+    "fitted_on_sha256": "ff478b38f2f0996b5301a48f93f0a4b0a40b7bc321440c69f8e85ff31c6eb50a",
+    "train_rows": 105120
+  },
+  "outputs": {
+    "signal_features.parquet": {
+      "sha256": "6b636698dee2ef66358975b94f3a00c0e4f3ceadbbc87f36a5843fb58c7cfdc3"
+    },
+    "feature_contract.json": {
+      "sha256": "6a2100b06fe61a8b3ebca06df4d9fcd0a2dd4b46f2a51b5905ddff85b92fa70f"
+    }
+  },
+  "output_rows": 210384,
+  "stations": [
+    "AZ_Tucson_11_W",
+    "CA_Fallbrook_5_NE",
+    "MS_Newton_5_ENE",
+    "NY_Ithaca_13_E",
+    "OK_Goodwell_2_E",
+    "OK_Goodwell_2_SE"
+  ],
+  "feature_columns": [
+    "sp_dtheta_dry_5",
+    "sp_dtheta_dry_10",
+    "sp_innov_5",
+    "sp_innov_10",
+    "sp_innov_z_5",
+    "sp_innov_z_10",
+    "sp_cusum_5",
+    "sp_cusum_10",
+    "sp_depth_gap",
+    "sp_depth_gap_z",
+    "sp_depth_xcorr",
+    "sp_replay_match",
+    "sp_replay_run",
+    "sp_rough_5",
+    "sp_rough_10"
+  ],
+  "code_version": {
+    "package": "signal-processing",
+    "version": "0.1.0",
+    "source_sha256": "e838b7e4e97ceb81d438f877cefa590607306ed2037a2743921d1147d4e8ed0f"
+  },
+  "package_versions": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "pyarrow": "26.0.0",
+    "pydantic": "2.14.1",
+    "pyyaml": "6.0.3",
+    "typer": "0.27.3"
+  }
+}
